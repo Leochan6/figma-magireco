@@ -1,0 +1,160 @@
+<h2>Magia Record Character Creator</h2>
+<p>Name: <select id="name"></select></p>
+<p>Attribute: 
+  <select id="attribute">
+    <option value="Dark">Dark</option>
+    <option value="Fire">Fire</option>
+    <option selected value="Light">Light</option>
+    <option value="Forest">Forest</option>
+    <option value="Void">Void</option>
+    <option value="Water">Water</option>
+  </select>
+</p>
+<p>Rank: 
+  <select id="rank">
+    <option value="1">1</option>
+    <option selected value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+  </select>
+</p>
+<p>Experience Level: <input id="level" type="number" value="1" maxlength="3" size="3" min="1" max="100"></p>
+<p>Magic Level: 
+  <select id="magic">
+    <option selected value="0">0</option>
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+  </select>
+</p>
+<p>Magia Level: 
+  <select id="magia">
+    <option selectedvalue="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+  </select>
+</p>
+<p>Episode Level: 
+  <select id="episode">
+    <option selectedvalue="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+  </select>
+</p>
+<p>Full Component Name: <input id="full_name" type="checkbox"></p>
+
+<button id="create">Create</button>
+<button id="cancel">Cancel</button>
+
+<p>Problems:</p>
+<textarea id="problems" value="None" align="top" rows="6" cols="40" readonly>None</textarea>
+
+<script>
+
+parent.postMessage({ pluginMessage: { type: 'get-names' } }, '*')
+
+document.getElementById('name').onchange = () => {
+  const name = document.getElementById('name').value;
+  parent.postMessage({ pluginMessage: { type: 'name-change', name:name } }, '*')
+}
+
+document.getElementById('rank').onchange = () => {
+  const rank = parseInt(document.getElementById('rank').value,10);
+  if (rank == 1) {
+    document.getElementById('level').max = 40;
+    if (parseInt(document.getElementById('level').value) > 40) document.getElementById('level').value = 40;
+  }
+  else if (rank == 2) {
+    document.getElementById('level').max = 50;
+    if (parseInt(document.getElementById('level').value) > 50) document.getElementById('level').value = 50;
+  }
+  else if (rank == 3) {
+    document.getElementById('level').max = 60;
+    if (parseInt(document.getElementById('level').value) > 60) document.getElementById('level').value = 60;
+  }
+  else if (rank == 4) {
+    document.getElementById('level').max = 80;
+    if (parseInt(document.getElementById('level').value) > 80) document.getElementById('level').value = 80;
+  }
+  else if (rank == 5) {
+    document.getElementById('level').max = 100;
+  }
+}
+
+document.getElementById('episode').onchange = () => {
+  const episode = parseInt(document.getElementById('episode').value,10);
+  const magia = parseInt(document.getElementById('magia').value,10);
+  for (var i = 4; i > episode-1; i--) {
+    document.getElementById('magia').options[i].disabled = true;
+  }
+  for (var i = episode-1; i >= 0; i--) {
+    document.getElementById('magia').options[i].disabled = false;
+  }
+  for (var i = 4; i > episode-1; i--) {
+    if (document.getElementById('magia').value == (i+1).toString(10)) {
+      document.getElementById('magia').value = (episode).toString(10);
+    }
+  }
+}
+
+document.getElementById('create').onclick = () => {
+  const textbox1 = document.getElementById('name');
+  const textbox2 = document.getElementById('attribute');
+  const textbox3 = document.getElementById('rank');
+  const textbox4 = document.getElementById('level');
+  const textbox5 = document.getElementById('magic');
+  const textbox6 = document.getElementById('magia');
+  const textbox7 = document.getElementById('episode');
+  const checkbox = document.getElementById('full_name');
+  const name = textbox1.value;
+  const attribute = textbox2.value;
+  const rank = textbox3.value;
+  const level = textbox4.value;
+  const magic = textbox5.value;
+  const magia = textbox6.value;
+  const episode = textbox7.value;
+  const full_name = checkbox.checked;
+  parent.postMessage({ pluginMessage: { type: 'create-display', name, attribute, rank, level, magic, magia, episode, full_name } }, '*')
+}
+
+document.getElementById('cancel').onclick = () => {
+  parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
+}
+
+onmessage = (event) => {
+  if (event.data.pluginMessage.type === 'update-problems') {
+    document.getElementById('problems').value = event.data.pluginMessage.message;
+  }
+  else if (event.data.pluginMessage.type === 'update-attribute-rank') {
+    console.log(event.data.pluginMessage);
+    for (var i = 0; i < 5; i++) {
+      document.getElementById('rank').options[i].disabled = event.data.pluginMessage.rank[i];
+      if (!event.data.pluginMessage.rank[i] && event.data.pluginMessage.rank[i-1]) {
+        document.getElementById('rank').value = (i+1).toString(10);
+      }
+    }
+    document.getElementById('attribute').value = event.data.pluginMessage.attribute;
+    for (var i = 0; i < 6; i++) {
+      if (document.getElementById('attribute').options[i].value != event.data.pluginMessage.attribute) {
+        document.getElementById('attribute').options[i].disabled = true;
+      } else {
+        document.getElementById('attribute').options[i].disabled = false;
+      }
+    }
+    document.getElementById('rank').dispatchEvent(new Event('change'));
+  }
+  else if (event.data.pluginMessage.type === 'update-names') {
+    event.data.pluginMessage.names.forEach(function(name) {
+      document.getElementById('name').options.add(new Option(name, name, false));
+    });
+    document.getElementById('name').value = "Iroha Tamaki";
+    document.getElementById('name').dispatchEvent(new Event('change'));
+  }
+}
+
+</script>
