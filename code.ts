@@ -16,6 +16,40 @@ figma.ui.onmessage = msg => {
       instance.name = "Character Display/" + msg.name;
       var full_name = instance.name + " - Rank " + msg.rank + " - Level " + msg.level + " - Magic " + msg.magic + " - Magia " +  msg.magia + " - Epsiode " + msg.episode;
       if (msg.full_name) instance.name = full_name;
+
+      // add display as a child of the current selection.
+      var selections = figma.currentPage.selection;
+      if (selections.length == 1) {
+        var selection = selections[0];
+        if (selection.type == "FRAME" || selection.type == "GROUP" || selection.type == "COMPONENT") {
+          var last_child = selection.children[0];
+          var x_next = last_child.x + last_child.width;
+          var y_next = last_child.y;
+          
+          // set the instance x and y value.
+          if (x_next < selection.width && y_next < selection.height) {
+            instance.x = x_next;
+            instance.y = y_next;
+          } else if (x_next >= selection.width) {
+            instance.x = 0;
+            instance.y = last_child.y + instance.height;
+          }
+          selection.insertChild(0, instance);
+        }
+        if (selection.type == "INSTANCE") {
+          if (selection.parent.type == "FRAME" || selection.parent.type == "GROUP" || selection.parent.type == "COMPONENT") {
+            // set the instance x and y value.
+            instance.x = selection.x + selection.width;
+            instance.y = selection.y;
+            // find the index to insert.
+            for (var i = 0; i < selection.parent.children.length; i++) {
+              if (selection.parent.children[i] == selection) {
+                selection.parent.insertChild(i, instance);
+              }
+            }
+          }
+        }
+      }
       figma.loadFontAsync({ family: "Roboto", style: "Regular" }).then(() => {
         setCharacter(instance, msg.name, msg.attribute, msg.rank, valid.component_id);
         setLevel(instance, msg.level);

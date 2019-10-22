@@ -131,7 +131,6 @@ onmessage = (event) => {
     document.getElementById('problems').value = event.data.pluginMessage.message;
   }
   else if (event.data.pluginMessage.type === 'update-attribute-rank') {
-    console.log(event.data.pluginMessage);
     for (var i = 0; i < 5; i++) {
       document.getElementById('rank').options[i].disabled = event.data.pluginMessage.rank[i];
       if (!event.data.pluginMessage.rank[i] && event.data.pluginMessage.rank[i-1]) {
