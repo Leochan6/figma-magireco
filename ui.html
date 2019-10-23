@@ -1,58 +1,70 @@
 <h2>Magia Record Character Creator</h2>
-<p>Name: <select id="name"></select></p>
-<p>Attribute: 
-  <select id="attribute">
-    <option value="Dark">Dark</option>
-    <option value="Fire">Fire</option>
-    <option selected value="Light">Light</option>
-    <option value="Forest">Forest</option>
-    <option value="Void">Void</option>
-    <option value="Water">Water</option>
-  </select>
-</p>
-<p>Rank: 
-  <select id="rank">
-    <option value="1">1</option>
-    <option selected value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-    <option value="5">5</option>
-  </select>
-</p>
-<p>Experience Level: <input id="level" type="number" value="1" maxlength="3" size="3" min="1" max="100"></p>
-<p>Magic Level: 
-  <select id="magic">
-    <option selected value="0">0</option>
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-  </select>
-</p>
-<p>Magia Level: 
-  <select id="magia">
-    <option selectedvalue="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-    <option value="5">5</option>
-  </select>
-</p>
-<p>Episode Level: 
-  <select id="episode">
-    <option selectedvalue="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-    <option value="5">5</option>
-  </select>
-</p>
-<p>Full Component Name: <input id="full_name" type="checkbox"></p>
 
-<button id="create">Create</button>
-<button id="cancel">Cancel</button>
+<div class="tab-bar">
+  <button id="homebtn" class="tablink" style="background-color:silver" onclick="openTab(event,'Home')">Home</button>
+  <button id="settingsbtn" class="tablink" onclick="openTab(event,'Settings')">Settings</button>
+</div>
 
-<p>Problems:</p>
-<textarea id="problems" value="None" align="top" rows="6" cols="40" readonly>None</textarea>
+<div id="Home" class="tab">
+  <p>Name: <select id="name"></select></p>
+  <p>Attribute: 
+    <select id="attribute">
+      <option value="Dark">Dark</option>
+      <option value="Fire">Fire</option>
+      <option selected value="Light">Light</option>
+      <option value="Forest">Forest</option>
+      <option value="Void">Void</option>
+      <option value="Water">Water</option>
+    </select>
+  </p>
+  <p>Rank: 
+    <select id="rank">
+      <option value="1">1</option>
+      <option selected value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+    </select>
+  </p>
+  <p>Experience Level: <input id="level" type="number" value="1" maxlength="3" size="3" min="1" max="100"></p>
+  <p>Magic Level: 
+    <select id="magic">
+      <option selected value="0">0</option>
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+    </select>
+  </p>
+  <p>Magia Level: 
+    <select id="magia">
+      <option selectedvalue="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+    </select>
+  </p>
+  <p>Episode Level: 
+    <select id="episode">
+      <option selectedvalue="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+    </select>
+  </p>
+  <p>Full Component Name: <input id="full_name" type="checkbox"></p>
+
+  <button id="create" type="submit">Create</button>
+  <button id="cancel">Cancel</button>
+
+  <p>Problems:</p>
+  <textarea id="problems" value="None" align="top" rows="6" cols="40" readonly>None</textarea>
+</div>
+
+<div id="Settings" class="tab" style="display:none">
+  <p>Keep Dialog Open: <input id="keep_open" type="checkbox" checked></p>
+</div>
 
 <script>
 
@@ -111,6 +123,7 @@ document.getElementById('create').onclick = () => {
   const textbox6 = document.getElementById('magia');
   const textbox7 = document.getElementById('episode');
   const checkbox = document.getElementById('full_name');
+  const keep_open_checkbox = document.getElementById('keep_open');
   const name = textbox1.value;
   const attribute = textbox2.value;
   const rank = textbox3.value;
@@ -119,7 +132,8 @@ document.getElementById('create').onclick = () => {
   const magia = textbox6.value;
   const episode = textbox7.value;
   const full_name = checkbox.checked;
-  parent.postMessage({ pluginMessage: { type: 'create-display', name, attribute, rank, level, magic, magia, episode, full_name } }, '*')
+  const keep_open = keep_open_checkbox.checked;
+  parent.postMessage({ pluginMessage: { type: 'create-display', name, attribute, rank, level, magic, magia, episode, full_name, keep_open } }, '*')
 }
 
 document.getElementById('cancel').onclick = () => {
@@ -154,6 +168,27 @@ onmessage = (event) => {
     document.getElementById('name').value = "Iroha Tamaki";
     document.getElementById('name').dispatchEvent(new Event('change'));
   }
+}
+
+document.addEventListener('keypress', function(event) {
+  if (event.keyCode == 13) {
+    event.preventDefault();
+    document.getElementById("create").click();
+  }
+});
+
+function openTab(event, tabName) {
+  var i;
+  var x = document.getElementsByClassName("tab");
+  for (i = 0; i < x.length; i++) {
+    x[i].style.display = "none";  
+  }
+  tablinks = document.getElementsByClassName("tablink");
+  for (i = 0; i < x.length; i++) {
+    tablinks[i].style = "background-color:buttonface"
+  }
+  document.getElementById(tabName).style.display = "block";
+  event.currentTarget.style = "background-color:silver"
 }
 
 </script>

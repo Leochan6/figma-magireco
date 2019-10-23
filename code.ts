@@ -7,6 +7,8 @@ figma.ui.resize(400, 550);
 // posted message.
 figma.ui.onmessage = msg => {
 
+  // setInterval(() => { selections = figma.currentPage.selection; console.log(selections[0].name, selections[0].id)}, 1000);
+
   // main logic
   if (msg.type === 'create-display') {
     var valid = parametersValid(msg);
@@ -22,22 +24,24 @@ figma.ui.onmessage = msg => {
       if (selections.length == 1) {
         var selection = selections[0];
         if (selection.type == "FRAME" || selection.type == "GROUP" || selection.type == "COMPONENT") {
-          var last_child = selection.children[0];
-          var x_next = last_child.x + last_child.width;
-          var y_next = last_child.y;
-          
-          // set the instance x and y value.
-          if (x_next < selection.width && y_next < selection.height) {
-            instance.x = x_next;
-            instance.y = y_next;
-          } else if (x_next >= selection.width) {
-            instance.x = 0;
-            instance.y = last_child.y + instance.height;
+          if (selection.children.length > 0) {
+            var last_child = selection.children[0];
+            var x_next = last_child.x + last_child.width;
+            var y_next = last_child.y;
+            
+            // set the instance x and y value.
+            if (x_next < selection.width && y_next < selection.height) {
+              instance.x = x_next;
+              instance.y = y_next;
+            } else if (x_next >= selection.width) {
+              instance.x = 0;
+              instance.y = last_child.y + instance.height;
+            }
           }
           selection.insertChild(0, instance);
         }
-        if (selection.type == "INSTANCE") {
-          if (selection.parent.type == "FRAME" || selection.parent.type == "GROUP" || selection.parent.type == "COMPONENT") {
+        else if (selection.type == "INSTANCE") {
+          if (selection.parent.type == "FRAME" || selection.parent.type == "GROUP" || selection.parent.type == "COMPONENT" || selection.parent.type == "PAGE" || selection.parent.type == "DOCUMENT") {
             // set the instance x and y value.
             instance.x = selection.x + selection.width;
             instance.y = selection.y;
@@ -57,7 +61,7 @@ figma.ui.onmessage = msg => {
         setMagia(instance, msg.magia, msg.episode);
         console.log("Created: " + instance.name);
       });
-      figma.closePlugin();
+      if (!msg.keep_open) figma.closePlugin();
     } else {
       // log input and invalid fields.
       console.log("Charcter Display Not Created.");
