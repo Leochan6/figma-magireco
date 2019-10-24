@@ -107,6 +107,54 @@ figma.ui.onmessage = msg => {
     }
   }
 
+  if (msg.type === 'update-display') {
+    var valid = parametersValid(msg);
+    if (valid.name_valid && valid.attribute_valid && valid.rank_valid && valid.level_valid && valid.magic_valid && valid.magia_valid && valid.episode_valid) {
+      var character_display = figma.getNodeById("3:908") as ComponentNode;
+      var instance = character_display.createInstance();
+      instance.name = "Character Display/" + msg.name;
+      var full_name = instance.name + " - Rank " + msg.rank + " - Level " + msg.level + " - Magic " + msg.magic + " - Magia " +  msg.magia + " - Epsiode " + msg.episode;
+      if (msg.full_name) instance.name = full_name;
+
+      // replace display as a child of the current selection.
+      var selections = figma.currentPage.selection;
+      if (selections.length == 1) {
+        var selection = selections[0];
+        if (selection.type == "INSTANCE" && selection.masterComponent.name == "Character Display") {
+          if (selection.parent.type == "FRAME" || selection.parent.type == "GROUP" || selection.parent.type == "COMPONENT" || selection.parent.type == "PAGE" || selection.parent.type == "DOCUMENT") {
+            // set the instance x and y value.
+            instance.x = selection.x;
+            instance.y = selection.y;
+            // find the index to insert.
+            for (var i = 0; i < selection.parent.children.length; i++) {
+              if (selection.parent.children[i] == selection) {
+                selection.parent.insertChild(i, instance);
+                selection.remove();
+                break;
+              }
+            }
+          }
+        }
+      }
+      figma.loadFontAsync({ family: "Roboto", style: "Regular" }).then(() => {
+        setCharacter(instance, msg.name, msg.attribute, msg.rank, valid.component_id);
+        setLevel(instance, msg.level);
+        setMagic(instance, msg.magic);
+        setMagia(instance, msg.magia, msg.episode);
+        console.log("Created: " + instance.name);
+      });
+      if (!msg.keep_open) figma.closePlugin();
+    } else {
+      // log input and invalid fields.
+      console.log("Charcter Display Not Updated.");
+      console.log(valid.message);
+      console.log(msg);
+      console.log(valid);
+      // send invalid message to dialog.
+      figma.ui.postMessage({type: 'update-problems', message:valid.message });
+    }
+  }
+
   // get the list of Magical Girl names.
   else if (msg.type === 'get-names') {
     var names = getNames();
@@ -330,12 +378,9 @@ function getDisplayProperties (selection_properties) {
   var contents_group = characted_base_instance.children[0] as FrameNode;
   var level_text = instance.children[3] as TextNode;
 
-  var magia_episode = magia_instance.masterComponent.name.split(" ")[1].split("-");
-  display_properties["magia"] = magia_episode[0];
-  display_properties["episode"] = magia_episode[1];
-
-  var magic = magic_instance.masterComponent.name.split(" ")[1];
-  display_properties["magic"] = magic;
+  var card_instance = contents_group.children[2] as InstanceNode
+  var name = card_instance.masterComponent.name.split("/")[1];
+  display_properties["name"] = name;
 
   var attribute_instance = characted_base_instance.children[2] as InstanceNode
   var attribute = attribute_instance.masterComponent.name.split("/")[1];
@@ -345,12 +390,18 @@ function getDisplayProperties (selection_properties) {
   var rank = frame_instance.masterComponent.name.split(" ")[1];
   display_properties["rank"] = rank;
 
-  var card_instance = contents_group.children[2] as InstanceNode
-  var name = card_instance.masterComponent.name.split("/")[1];
-  display_properties["name"] = name;
-
   var level = level_text.characters.split(" ")[1];
   display_properties["level"] = level;
+
+  var magic = magic_instance.masterComponent.name.split(" ")[1];
+  display_properties["magic"] = magic;
+
+  var magia_episode = magia_instance.masterComponent.name.split(" ")[1].split("-");
+  display_properties["magia"] = magia_episode[0];
+  display_properties["episode"] = magia_episode[1];
+
+
+
 
   return display_properties;
 }

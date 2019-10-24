@@ -54,7 +54,7 @@
   <p>Full Component Name: <input id="full_name" type="checkbox"></p>
 
   <button id="create" type="submit">Create</button>
-  <button id="update" disabled>Update</button>
+  <button id="update" disabled>Update Selected</button>
   <button id="copy" disabled>Copy Selected</button>
   <button id="cancel">Cancel</button>
 
@@ -115,30 +115,49 @@ document.getElementById('episode').onchange = () => {
 }
 
 document.getElementById('create').onclick = () => {
-  const textbox1 = document.getElementById('name');
-  const textbox2 = document.getElementById('attribute');
-  const textbox3 = document.getElementById('rank');
-  const textbox4 = document.getElementById('level');
-  const textbox5 = document.getElementById('magic');
-  const textbox6 = document.getElementById('magia');
-  const textbox7 = document.getElementById('episode');
-  const checkbox = document.getElementById('full_name');
-  const keep_open_checkbox = document.getElementById('keep_open');
-  const name = textbox1.value;
-  const attribute = textbox2.value;
-  const rank = textbox3.value;
-  const level = textbox4.value;
-  const magic = textbox5.value;
-  const magia = textbox6.value;
-  const episode = textbox7.value;
-  const full_name = checkbox.checked;
-  const keep_open = keep_open_checkbox.checked;
+  const name = document.getElementById('name').value;
+  const attribute = document.getElementById('attribute').value;
+  const rank = document.getElementById('rank').value;
+  const level = document.getElementById('level').value;
+  const magic = document.getElementById('magic').value;
+  const magia = document.getElementById('magia').value;
+  const episode = document.getElementById('episode').value;
+  const full_name = document.getElementById('full_name').checked;
+  const keep_open = document.getElementById('keep_open').checked;
   parent.postMessage({ pluginMessage: { type: 'create-display', name, attribute, rank, level, magic, magia, episode, full_name, keep_open } }, '*')
 }
 
 document.getElementById('cancel').onclick = () => {
   parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
 }
+
+document.getElementById('copy').onclick = () => {
+  document.getElementById('name').value = display_properties.name;
+  document.getElementById('attribute').value = display_properties.attribute;
+  document.getElementById('rank').value = display_properties.rank;
+  document.getElementById('level').value = display_properties.level;
+  document.getElementById('magic').value = display_properties.magic;
+  document.getElementById('magia').value = display_properties.magia;
+  document.getElementById('episode').value = display_properties.episode;
+  
+  document.getElementById('copy').disabled = true;
+  //document.getElementById('update').disabled = false;
+}
+
+document.getElementById('update').onclick = () => {
+  const name = document.getElementById('name').value;
+  const attribute = document.getElementById('attribute').value;
+  const rank = document.getElementById('rank').value;
+  const level = document.getElementById('level').value;
+  const magic = document.getElementById('magic').value;
+  const magia = document.getElementById('magia').value;
+  const episode = document.getElementById('episode').value;
+  const full_name = document.getElementById('full_name').checked;
+  const keep_open = document.getElementById('keep_open').checked;
+  parent.postMessage({ pluginMessage: { type: 'update-display', name, attribute, rank, level, magic, magia, episode, full_name, keep_open } }, '*')
+}
+
+var display_properties = {};
 
 onmessage = (event) => {
   if (event.data.pluginMessage.type === 'update-problems') {
@@ -168,6 +187,13 @@ onmessage = (event) => {
     document.getElementById('name').value = "Iroha Tamaki";
     document.getElementById('name').dispatchEvent(new Event('change'));
   }
+
+  else if (event.data.pluginMessage.type === 'update-properties') {
+    display_properties = event.data.pluginMessage.display_properties
+    document.getElementById('copy').disabled = false;
+    document.getElementById('update').disabled = false;
+  }
+  
 }
 
 document.addEventListener('keypress', function(event) {
