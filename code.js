@@ -4,8 +4,34 @@ figma.ui.resize(400, 550);
 // Calls to "parent.postMessage" from within the HTML page will trigger this
 // callback. The callback will be passed the "pluginMessage" property of the
 // posted message.
+var selections_array = [];
 figma.ui.onmessage = msg => {
-    // setInterval(() => { selections = figma.currentPage.selection; console.log(selections[0].name, selections[0].id)}, 1000);
+    setInterval(function () {
+        var new_selections_array = [];
+        selections = figma.currentPage.selection;
+        selections.forEach(function (selection) {
+            var properties = { "id": selection.id, "name": selection.name, "type": selection.type };
+            if (selection.type == "INSTANCE") {
+                properties["masterComponentId"] = selection.masterComponent.id;
+                properties["masterComponentName"] = selection.masterComponent.name;
+            }
+            new_selections_array.push(properties);
+        });
+        if (!selectionSame(new_selections_array, selections_array)) {
+            if (new_selections_array.length > 0) {
+                console.log(new_selections_array);
+            }
+            selections_array = new_selections_array;
+            // enable copy button
+            if (selections_array.length == 1) {
+                if (selections_array[0].masterComponentName == "Character Display") {
+                    var display_properties = getDisplayProperties(selections_array[0]);
+                    console.log(display_properties);
+                    figma.ui.postMessage({ type: 'update-properties', display_properties: display_properties });
+                }
+            }
+        }
+    }, 1000);
     // main logic
     if (msg.type === 'create-display') {
         var valid = parametersValid(msg);
@@ -86,6 +112,7 @@ figma.ui.onmessage = msg => {
         figma.closePlugin();
     }
 };
+// Functions.
 // check if the parameters in msg are valid.
 function parametersValid(msg) {
     var character_image = figma.getNodeById("1:142");
@@ -310,4 +337,48 @@ function getAttributeRanks(name) {
         }
     });
     return result;
+}
+// gets the properties of the current selection.
+function getDisplayProperties(selection_properties) {
+    var display_properties = {};
+    var instance = figma.getNodeById(selection_properties.id);
+    var magia_instance = instance.children[0];
+    var magic_instance = instance.children[1];
+    var characted_base_instance = instance.children[2];
+    var contents_group = characted_base_instance.children[0];
+    var level_text = instance.children[3];
+    var magia_episode = magia_instance.masterComponent.name.split(" ")[1].split("-");
+    display_properties["magia"] = magia_episode[0];
+    display_properties["episode"] = magia_episode[1];
+    var magic = magic_instance.masterComponent.name.split(" ")[1];
+    display_properties["magic"] = magic;
+    var attribute_instance = characted_base_instance.children[2];
+    var attribute = attribute_instance.masterComponent.name.split("/")[1];
+    display_properties["attribute"] = attribute;
+    var frame_instance = characted_base_instance.children[1];
+    var rank = frame_instance.masterComponent.name.split(" ")[1];
+    display_properties["rank"] = rank;
+    var card_instance = contents_group.children[2];
+    var name = card_instance.masterComponent.name.split("/")[1];
+    display_properties["name"] = name;
+    var level = level_text.characters.split(" ")[1];
+    display_properties["level"] = level;
+    return display_properties;
+}
+function selectionSame(x, y) {
+    var selectionAreSame = true;
+    try {
+        for (var index in x) {
+            for (var propertyName in x[index]) {
+                if (x[index][propertyName] !== y[index][propertyName]) {
+                    selectionAreSame = false;
+                    break;
+                }
+            }
+        }
+    }
+    catch (err) {
+        selectionAreSame = false;
+    }
+    return selectionAreSame;
 }
