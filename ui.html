@@ -1,70 +1,101 @@
-<div class="tab-bar">
-  <button id="homebtn" class="tablink" style="background-color:silver" onclick="openTab(event,'Home')">Home</button>
-  <button id="settingsbtn" class="tablink" onclick="openTab(event,'Settings')">Settings</button>
+<div class="tab-bar" style="background-color:#2c2c2c">
+  <button id="homebtn" class="tablink button buttonBlue" onclick="openTab(event,'Home')">Home</button>
+  <button id="settingsbtn" class="tablink button buttonGray" onclick="openTab(event,'Settings')">Settings</button>
 </div>
 
 <div id="Home" class="tab">
-  <p>Name: <select id="name"></select></p>
-  <p>Attribute: 
-    <select id="attribute">
-      <option value="Dark">Dark</option>
-      <option value="Fire">Fire</option>
-      <option selected value="Light">Light</option>
-      <option value="Forest">Forest</option>
-      <option value="Void">Void</option>
-      <option value="Water">Water</option>
-    </select>
-  </p>
-  <p>Rank: 
-    <select id="rank">
-      <option value="1">1</option>
-      <option selected value="2">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
-      <option value="5">5</option>
-    </select>
-  </p>
-  <p>Experience Level: <input id="level" type="number" value="1" maxlength="3" size="3" min="1" max="100"></p>
-  <p>Magic Level: 
-    <select id="magic">
-      <option selected value="0">0</option>
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-    </select>
-  </p>
-  <p>Magia Level: 
-    <select id="magia">
-      <option selectedvalue="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
-      <option value="5">5</option>
-    </select>
-  </p>
-  <p>Episode Level: 
-    <select id="episode">
-      <option selectedvalue="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
-      <option value="5">5</option>
-    </select>
-  </p>
-  <p>Full Component Name: <input id="full_name" type="checkbox"></p>
-
-  <button id="create" type="submit">Create</button>
-  <button id="update" disabled>Update Selected</button>
-  <button id="copy" disabled>Copy Selected</button>
-  <button id="cancel">Cancel</button>
-
-  <p>Problems:</p>
-  <textarea id="problems" value="None" align="top" rows="6" cols="40" readonly>None</textarea>
+  <div id="Home Fields">
+    <p>Name: <select id="name"></select></p>
+    <p>Attribute: 
+      <select id="attribute">
+        <option value="Dark">Dark</option>
+        <option value="Fire">Fire</option>
+        <option selected value="Light">Light</option>
+        <option value="Forest">Forest</option>
+        <option value="Void">Void</option>
+        <option value="Water">Water</option>
+      </select>
+    </p>
+    <p>Rank: 
+      <select id="rank">
+        <option value="1">1</option>
+        <option selected value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+    </p>
+    <p>Experience Level: <input id="level" type="number" value="1" maxlength="3" size="3" min="1" max="100"></p>
+    <p>Magic Level: 
+      <select id="magic">
+        <option selected value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+      </select>
+    </p>
+    <p>Magia Level: 
+      <select id="magia">
+        <option selectedvalue="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+    </p>
+    <p>Episode Level: 
+      <select id="episode">
+        <option selectedvalue="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+    </p>
+  </div>
+  <div id="Home Buttons">
+    <button id="create" class="button buttonGray" type="submit">Create</button>
+    <button id="cancel" class="button buttonGray">Cancel</button>
+    <button id="update"class="button buttonGray" disabled>Update Selected</button>
+    <button id="copy" class="button buttonGray" disabled>Copy Selected</button>
+  </div>
+  <div id="Home Problems">
+    <p>Problems:</p>
+    <textarea id="problems" value="None" align="top" rows="6" cols="40" readonly>None</textarea>
+  </div>
 </div>
 
 <div id="Settings" class="tab" style="display:none">
   <p>Keep Dialog Open: <input id="keep_open" type="checkbox" checked></p>
+  <p>Full Component Name: <input id="full_name" type="checkbox"></p>
 </div>
+
+
+
+
+<style>
+  .button {
+    background-color: #2c2c2c; /* Gray */
+    border: none;
+    color: white;
+    padding: 12px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+  }
+
+  .buttonBlue {background-color: #18a0fb;} /* Blue */
+  .buttonGray {background-color: #2c2c2c;} /* Gray */
+  .buttonGray:hover {background-color: #000000;}
+  .buttonDisabled {
+    background-color: #0c0c0c;
+    disabled: true;
+  }
+</style>
+
 
 <script>
 
@@ -160,9 +191,13 @@ document.getElementById('update').onclick = () => {
 var display_properties = {};
 
 onmessage = (event) => {
+  
+  document.getElementById('problems').value = "";
+
   if (event.data.pluginMessage.type === 'update-problems') {
     document.getElementById('problems').value = event.data.pluginMessage.message;
   }
+
   else if (event.data.pluginMessage.type === 'update-attribute-rank') {
     for (var i = 0; i < 5; i++) {
       document.getElementById('rank').options[i].disabled = event.data.pluginMessage.rank[i];
@@ -193,6 +228,12 @@ onmessage = (event) => {
     document.getElementById('copy').disabled = false;
     document.getElementById('update').disabled = false;
   }
+
+  else if (event.data.pluginMessage.type === 'disable-element') {
+    name = event.data.pluginMessage.name;
+    document.getElementById(name).disabled = true;
+    document.getElementById(name).className.replace("buttonGray", "buttonDisabled");
+  }
   
 }
 
@@ -211,10 +252,11 @@ function openTab(event, tabName) {
   }
   tablinks = document.getElementsByClassName("tablink");
   for (i = 0; i < x.length; i++) {
-    tablinks[i].style = "background-color:buttonface"
+    tablinks[i].className = tablinks[i].className.replace("buttonBlue", "buttonGray");
+
   }
   document.getElementById(tabName).style.display = "block";
-  event.currentTarget.style = "background-color:silver"
+  event.currentTarget.className = event.currentTarget.className.replace("buttonGray", "buttonBlue");
 }
 
 </script>

@@ -1,6 +1,6 @@
 // This shows the HTML page in "ui.html".
 figma.showUI(__html__);
-figma.ui.resize(400, 550);
+figma.ui.resize(400, 600);
 
 // Calls to "parent.postMessage" from within the HTML page will trigger this
 // callback. The callback will be passed the "pluginMessage" property of the
@@ -21,6 +21,7 @@ figma.ui.onmessage = msg => {
       }
       new_selections_array.push(properties);
     });
+
     if (!selectionSame(new_selections_array,selections_array)) {
       if (new_selections_array.length > 0) {
         console.log(new_selections_array);
@@ -35,12 +36,14 @@ figma.ui.onmessage = msg => {
           figma.ui.postMessage({type: 'update-properties', display_properties:display_properties });
         }
       }
-
-
-
-
-
     }
+
+    // // disable update button
+    // if (new_selections_array.length == 0) {
+    //   console.log("disable")
+    //   figma.ui.postMessage({type: 'disable-element', name: "update" });
+    //   figma.ui.postMessage({type: 'disable-element', name: "copy" });
+    // }
   }, 1000);
 
   // main logic
@@ -108,17 +111,17 @@ figma.ui.onmessage = msg => {
   }
 
   if (msg.type === 'update-display') {
-    var valid = parametersValid(msg);
-    if (valid.name_valid && valid.attribute_valid && valid.rank_valid && valid.level_valid && valid.magic_valid && valid.magia_valid && valid.episode_valid) {
-      var character_display = figma.getNodeById("3:908") as ComponentNode;
-      var instance = character_display.createInstance();
-      instance.name = "Character Display/" + msg.name;
-      var full_name = instance.name + " - Rank " + msg.rank + " - Level " + msg.level + " - Magic " + msg.magic + " - Magia " +  msg.magia + " - Epsiode " + msg.episode;
-      if (msg.full_name) instance.name = full_name;
+    var selections = figma.currentPage.selection;
+    if (selections.length == 1) {
+      var valid = parametersValid(msg);
+      if (valid.name_valid && valid.attribute_valid && valid.rank_valid && valid.level_valid && valid.magic_valid && valid.magia_valid && valid.episode_valid) {
+        var character_display = figma.getNodeById("3:908") as ComponentNode;
+        var instance = character_display.createInstance();
+        instance.name = "Character Display/" + msg.name;
+        var full_name = instance.name + " - Rank " + msg.rank + " - Level " + msg.level + " - Magic " + msg.magic + " - Magia " +  msg.magia + " - Epsiode " + msg.episode;
+        if (msg.full_name) instance.name = full_name;
 
-      // replace display as a child of the current selection.
-      var selections = figma.currentPage.selection;
-      if (selections.length == 1) {
+        // replace display as a child of the current selection.
         var selection = selections[0];
         if (selection.type == "INSTANCE" && selection.masterComponent.name == "Character Display") {
           if (selection.parent.type == "FRAME" || selection.parent.type == "GROUP" || selection.parent.type == "COMPONENT" || selection.parent.type == "PAGE" || selection.parent.type == "DOCUMENT") {
@@ -133,25 +136,28 @@ figma.ui.onmessage = msg => {
                 break;
               }
             }
+            figma.loadFontAsync({ family: "Roboto", style: "Regular" }).then(() => {
+              setCharacter(instance, msg.name, msg.attribute, msg.rank, valid.component_id);
+              setLevel(instance, msg.level);
+              setMagic(instance, msg.magic);
+              setMagia(instance, msg.magia, msg.episode);
+              console.log("Created: " + instance.name);
+            });
           }
         }
-      }
-      figma.loadFontAsync({ family: "Roboto", style: "Regular" }).then(() => {
-        setCharacter(instance, msg.name, msg.attribute, msg.rank, valid.component_id);
-        setLevel(instance, msg.level);
-        setMagic(instance, msg.magic);
-        setMagia(instance, msg.magia, msg.episode);
-        console.log("Created: " + instance.name);
-      });
-      if (!msg.keep_open) figma.closePlugin();
+        if (!msg.keep_open) figma.closePlugin();
+      } else {
+        // log input and invalid fields.
+        console.log("Charcter Display Not Updated.");
+        console.log(valid.message);
+        console.log(msg);
+        console.log(valid);
+        // send invalid message to dialog.
+        figma.ui.postMessage({type: 'update-problems', message:valid.message });
+      } 
     } else {
-      // log input and invalid fields.
-      console.log("Charcter Display Not Updated.");
-      console.log(valid.message);
-      console.log(msg);
-      console.log(valid);
-      // send invalid message to dialog.
-      figma.ui.postMessage({type: 'update-problems', message:valid.message });
+      // send problem message to dialog for no display selected.
+      figma.ui.postMessage({type: 'update-problems', message:"One Character Display must be selected to update." });
     }
   }
 
