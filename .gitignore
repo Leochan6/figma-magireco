@@ -2,3 +2,4 @@
 node_modules/*
 *.json
 !manifest.json
+!tsconfig.json
