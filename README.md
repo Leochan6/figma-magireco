@@ -1,3 +1,12 @@
+# Magia Record Character Grid Creator Interface
+
+Duplicate the [Figma project](https://www.figma.com/file/jcgWY0YGzPbAwBp47LV3oL/Magia-Record-Character-Grids)
+
+
+## Installation Instructions
+
+[Figma Developer Steup Guide](https://www.figma.com/plugin-docs/setup/)
+
 This plugin template uses Typescript. If you are familiar with Javascript, Typescript will
 look very familiar. In fact, valid Javascript code is already valid Typescript code.
 
