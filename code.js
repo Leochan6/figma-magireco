@@ -330,7 +330,7 @@ function setMagic(instance, magic) {
     else if (magic == "2")
         magic_instance.masterComponent = figma.getNodeById("7:470");
     else if (magic == "3")
-        magic_instance.masterComponent = figma.getNodeById("3:25");
+        magic_instance.masterComponent = figma.getNodeById("7:477");
 }
 ;
 // sets the magia and episode level.
