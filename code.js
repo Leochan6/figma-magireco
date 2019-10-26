@@ -22,21 +22,21 @@ figma.ui.onmessage = msg => {
                 console.log(new_selections_array);
             }
             selections_array = new_selections_array;
-            // enable copy button
+            // enable copy and update buttons
             if (selections_array.length == 1) {
                 if (selections_array[0].masterComponentName == "Character Display") {
                     var display_properties = getDisplayProperties(selections_array[0]);
-                    console.log(display_properties);
                     figma.ui.postMessage({ type: 'update-properties', display_properties: display_properties });
+                    figma.ui.postMessage({ type: 'enable-element', name: "copy" });
+                    figma.ui.postMessage({ type: 'enable-element', name: "update" });
                 }
             }
+            // disable copy and update buttons
+            if (selections_array.length != 1) {
+                figma.ui.postMessage({ type: 'disable-element', name: "copy" });
+                figma.ui.postMessage({ type: 'disable-element', name: "update" });
+            }
         }
-        // // disable update button
-        // if (new_selections_array.length == 0) {
-        //   console.log("disable")
-        //   figma.ui.postMessage({type: 'disable-element', name: "update" });
-        //   figma.ui.postMessage({type: 'disable-element', name: "copy" });
-        // }
     }, 1000);
     // main logic
     if (msg.type === 'create-display') {
@@ -375,7 +375,7 @@ function getNames() {
     character_image.children.forEach(function (child) {
         var name = child.name;
         name = name.split("/")[1];
-        if (!names.includes(name)) {
+        if (names.indexOf(name) == -1) {
             names.push(name);
         }
     });
@@ -426,6 +426,8 @@ function getDisplayProperties(selection_properties) {
 }
 function selectionSame(x, y) {
     var selectionAreSame = true;
+    if (x.length != y.length)
+        return false;
     try {
         for (var index in x) {
             for (var propertyName in x[index]) {
