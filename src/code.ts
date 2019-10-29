@@ -1,10 +1,17 @@
+
 // This shows the HTML page in "ui.html".
 figma.showUI(__html__);
-figma.ui.resize(400, 600);
+figma.ui.resize(500, 600);
 
 // Calls to "parent.postMessage" from within the HTML page will trigger this
 // callback. The callback will be passed the "pluginMessage" property of the
 // posted message.
+
+
+var sortBy = [{  prop:'level',     direction: -1,   isString: false },
+              {  prop:'rank',      direction:  1,   isString: false },
+              {  prop:'attribute', direction:  1,   isString: true  },
+              {  prop:'id',        direction:  1,   isString: false }];
 
 var selections_array = [];
 
@@ -32,6 +39,7 @@ figma.ui.onmessage = msg => {
       if (selections_array.length == 1) {
         if (selections_array[0].masterComponentName == "Character Display") {
           var display_properties = getDisplayProperties(selections_array[0]);
+          // console.log(JSON.stringify(display_properties))
           figma.ui.postMessage({type: 'update-properties', display_properties:display_properties });
           figma.ui.postMessage({type: 'enable-element', name: "copy"});
           figma.ui.postMessage({type: 'enable-element', name: "update"});
@@ -232,7 +240,8 @@ function parametersValid (msg) {
           else result.message += "Experience Level must be between 1 and 100 for rank 5.\n";
         }
         if (result.name_valid && result.rank_valid && result.level_valid) {
-          if (child.description == "Attribute:" + msg.attribute) {
+          var description = JSON.parse(child.description);
+          if (description["attribute"] == msg.attribute) {
             result.attribute_valid = true;
             result.component_id = child.id;
           }
@@ -366,7 +375,8 @@ function getAttributeRanks (name: string) {
     var child_name = child.name;
     var child_name_split = child_name.split("/");
     if (child_name_split[1] == name) {
-      result.attribute = child.description.split(":")[1];
+      var description = JSON.parse(child.description);
+      result.attribute = description["attribute"];
       var rank = parseInt(child_name_split[2].split(" ")[1], 10);
       result.ranks[rank-1] = false;
     }
@@ -383,6 +393,9 @@ function getDisplayProperties (selection_properties) {
   var characted_base_instance = instance.children[2] as InstanceNode;
   var contents_group = characted_base_instance.children[0] as FrameNode;
   var level_text = instance.children[3] as TextNode;
+
+  
+  // display_properties["id"] = JSON.parse(card_instance.masterComponent.description)["id"];
 
   var card_instance = contents_group.children[2] as InstanceNode
   var name = card_instance.masterComponent.name.split("/")[1];
@@ -406,8 +419,7 @@ function getDisplayProperties (selection_properties) {
   display_properties["magia"] = magia_episode[0];
   display_properties["episode"] = magia_episode[1];
 
-
-
+  display_properties["id"] = JSON.parse(card_instance.masterComponent.description)["id"];
 
   return display_properties;
 }
@@ -429,4 +441,27 @@ function selectionSame(x, y) {
     selectionAreSame = false;
   }  
   return selectionAreSame;
+}
+
+/**
+ * https://bytemaster.io/javascript-object-multi-property-sort
+ * Function to be passed into array.sort() with a array storing the prop, direction, and isString.
+ * let sortBy = [{
+ *   prop:'grade',
+ *   direction: -1,
+ *   isString: false
+ * },{
+ *   prop:'lastName',
+ *   direction: 1,
+ *   isString: true
+ * }];
+ */ 
+function sortArrayBy(a, b, sortBy) {
+  let i = 0, result = 0;
+  while (i < sortBy.length && result === 0) {
+    if (sortBy[i].isString) result = sortBy[i].direction*(a[sortBy[i].prop].toString() < b[sortBy[i].prop].toString() ? -1 : (a[sortBy[i].prop].toString() > b[sortBy[i].prop].toString() ? 1 : 0));
+    else result = sortBy[i].direction*(parseInt((a[sortBy[i].prop]).toString()) < parseInt((b[sortBy[i].prop]).toString()) ? -1 : (parseInt((a[sortBy[i].prop]).toString()) > parseInt((b[sortBy[i].prop]).toString()) ? 1 : 0));
+    i++;
+  }
+  return result;
 }

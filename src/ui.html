@@ -1,0 +1,91 @@
+<body style="margin:0px">
+    <div id="tab_bar" class="tab-bar" style="background-color:#2c2c2c" align="left">
+        <button id="home_btn" class="tablink button buttonBlue" >Home</button>
+        <button id="sorting_btn" class="tablink button buttonGray" >Sorting</button>
+        <button id="settings_btn" class="tablink button buttonGray" >Settings</button>
+    </div>
+    <div id="tabs" style="margin:20px">
+        <div id="home_tab" class="tab">
+            <div id="home_fields" align="left">
+                <table id="fields_table">
+                    <tr>
+                        <td>Name:</td>
+                        <td><select id="name"></select></td>
+                    </tr>
+                    <tr>
+                        <td>Attribute: 
+                        <td><select id="attribute">
+                                <option value="Dark">Dark</option>
+                                <option value="Fire">Fire</option>
+                                <option selected value="Light">Light</option>
+                                <option value="Forest">Forest</option>
+                                <option value="Void">Void</option>
+                                <option value="Water">Water</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Rank:</td>
+                        <td><select id="rank">
+                            <option value="1">1</option>
+                            <option selected value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select></td> 
+                    </tr>
+                    <tr>    
+                        <td>Experience Level:</td> 
+                        <td><input id="level" class="custom-input" type="number" value=1 maxlength="3" size=3 min=1 max=100 border="2px solid black"></td> 
+                    </tr>
+                    <tr>    
+                        <td>Magic Level:</td> 
+                        <td><select id="magic">
+                            <option selected value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select></td> 
+                    </tr>
+                    <tr>
+                        <td>Magia Level:</td> 
+                        <td><select id="magia"> 
+                            <option selectedvalue="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select></td> 
+                    </tr>
+                    <tr>
+                        <td>Episode Level:</td> 
+                        <td><select id="episode">
+                            <option selectedvalue="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="home_buttons" align="left">
+                <button id="create" class="button buttonGray" type="submit">Create</button>
+                <button id="update"class="button buttonDisabled" disabled>Update Selected</button>
+                <button id="copy" class="button buttonDisabled" disabled>Copy Selected</button>
+                <button id="cancel" class="button buttonGray" disabled>Cancel</button>
+            </div>
+            <div id="home_problems" align="left">
+                <p style="font-size:16px">Problems:</p>
+                <textarea id="problems" value="None" rows="10" cols="53" resize="none" readonly>None</textarea>
+            </div>
+        </div>
+        <div id="sorting_tab" class="tab">
+
+        </div>
+        <div id="settings_tab" class="tab" style="display:none">
+            <p>Keep Dialog Open: <input id="keep_open" type="checkbox" checked></p>
+            <p>Full Component Name: <input id="full_name" type="checkbox"></p>
+        </div>
+    </div>
+</body>
