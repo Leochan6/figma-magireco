@@ -1,4 +1,4 @@
-import {getNames, getAttributeRanks, getDisplayProperties, selectionSame, sortArrayBy} from "./utils";
+import {getNames, getAttributeRanks, getDisplayProperties, selectionSame, selectionEquals, sortArrayBy} from "./utils";
 import {setCharacter, setLevel, setMagic, setMagia} from "./character";
 
 // This shows the HTML page in "ui.html".
@@ -9,61 +9,76 @@ figma.ui.resize(500, 600);
 // callback. The callback will be passed the "pluginMessage" property of the
 // posted message.
 
-
+// The default sorting order.
 var sortBy = [{  prop:'level',     direction: -1,   isString: false },
               {  prop:'rank',      direction:  1,   isString: false },
               {  prop:'attribute', direction:  1,   isString: true  },
               {  prop:'id',        direction:  1,   isString: false }];
 
+// Stores the current selection.
 var selections_array = [];
 
 figma.ui.onmessage = msg => {
 
+  // Checks the current selection at a set interval and act accordingly.
   setInterval(function() {
     var new_selections_array = [];
     selections = figma.currentPage.selection;
     selections.forEach(function(selection) {
-      var properties = {"id":selection.id, "name":selection.name, "type":selection.type};
+      var properties = {"nodeId":selection.id, "name":selection.name, "type":selection.type};
       if (selection.type == "INSTANCE") {
         properties["masterComponentId"] = selection.masterComponent.id;
         properties["masterComponentName"] = selection.masterComponent.name;
+      } else if (selection.type == "FRAME" || selection.type == "GROUP") {
+        properties["children"] = [];
+        selection.children.forEach((child) => {
+          var child_properties = {"nodeId":child.id, "name":child.name, "type":child.type};
+          if (child.type == "INSTANCE") {
+            child_properties["masterComponentId"] = child.masterComponent.id;
+            child_properties["masterComponentName"] = child.masterComponent.name;
+          }
+          properties["children"].push(child_properties);
+        })
       }
       new_selections_array.push(properties);
     });
 
-    if (!selectionSame(new_selections_array, selections_array)) {
-      if (new_selections_array.length > 0) {
-        console.log(new_selections_array);
-      }
+    // if (!selectionSame(new_selections_array, selections_array)) {
+    if (!selectionEquals(new_selections_array, selections_array)) {
+      console.log(new_selections_array);
       selections_array = new_selections_array;
 
       
       if (selections_array.length == 1) {
+
         // enable copy and update buttons
         if (selections_array[0].masterComponentName == "Character Display") {
           var display_properties = getDisplayProperties(selections_array[0]);
           // console.log(JSON.stringify(display_properties))
           figma.ui.postMessage({type: 'update-properties', display_properties:display_properties });
+          console.log("enable copy update");
           figma.ui.postMessage({type: 'enable-element', name: "copy"});
           figma.ui.postMessage({type: 'enable-element', name: "update"});
         } 
+
         // enable sort buttons
         else if (selections_array[0].type == "FRAME" || selections_array[0].type == "GROUP") {
-          var frame = figma.getNodeById(selections_array[0].id) as FrameNode;
+          var frame = figma.getNodeById(selections_array[0].nodeId) as FrameNode;
           var all_character_display = true;
-          frame.children.forEach((child: InstanceNode) => {
-            if (child.masterComponent.name != "Character Display") {
+          frame.children.forEach((child) => {
+            if (child.type != "INSTANCE" || child.masterComponent.name != "Character Display") {
               all_character_display = false;
             }
           });
           if (all_character_display) {
-            console.log('frame');
             figma.ui.postMessage({type: 'enable-element', name: "sort"});
           }
+          figma.ui.postMessage({type: 'disable-element', name: "copy"});
+          figma.ui.postMessage({type: 'disable-element', name: "update"});
         }
       }
 
-      // disable copy and update buttons
+      // disable copy and update and sort buttons
       if (selections_array.length != 1) {
         figma.ui.postMessage({type: 'disable-element', name: "copy"});
         figma.ui.postMessage({type: 'disable-element', name: "update"});
@@ -72,8 +87,22 @@ figma.ui.onmessage = msg => {
     }
   }, 1000);
 
-  // main logic
-  if (msg.type === 'create-display') {
+  // startup to check if in expected file
+  if (msg.type === 'startup') {
+    if (figma.getNodeById("3:908") === null || figma.getNodeById("3:908").name != "Character Display") {
+      var message = "The current file is not `Magia Record Character Grids`. Please duplicate and open the Figma Project as indicated in the plugin page before using this plugin.";
+      console.log(message)
+      alert(message);
+      figma.closePlugin();
+    }
+    else {
+      // get the names and set the name select field.
+      var names = getNames();
+      figma.ui.postMessage({type: 'update-names', names:names });
+    }
+  }
+  
+  else if (msg.type === 'create-display') {
     var valid = parametersValid(msg);
     if (valid.name_valid && valid.attribute_valid && valid.rank_valid && valid.level_valid && valid.magic_valid && valid.magia_valid && valid.episode_valid) {
       var character_display = figma.getNodeById("3:908") as ComponentNode;
@@ -185,12 +214,6 @@ figma.ui.onmessage = msg => {
       // send problem message to dialog for no display selected.
       figma.ui.postMessage({type: 'update-problems', message:"One Character Display must be selected to update." });
     }
-  }
-
-  // get the list of Magical Girl names.
-  else if (msg.type === 'get-names') {
-    var names = getNames();
-    figma.ui.postMessage({type: 'update-names', names:names });
   }
 
   // get the attribute and avaliable ranks for the name

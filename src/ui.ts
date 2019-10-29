@@ -36,8 +36,8 @@ const ui = {
     sorting: {
       sort_by_1_select:     document.getElementById('sort_by_1_select') as HTMLSelectElement,
       sort_by_2_select:     document.getElementById('sort_by_2_select') as HTMLSelectElement,
-      sort_order_1_select:  document.getElementById('sort_by_1_select') as HTMLSelectElement,
-      sort_order_2_select:  document.getElementById('sort_by_2_select') as HTMLSelectElement,
+      sort_order_1_select:  document.getElementById('sort_order_1_select') as HTMLSelectElement,
+      sort_order_2_select:  document.getElementById('sort_order_2_select') as HTMLSelectElement,
     },
     settings_tab:           document.getElementById('settings_tab') as HTMLDivElement,
     settings: {
@@ -47,25 +47,31 @@ const ui = {
   }
 }
 
-parent.postMessage({ pluginMessage: { type: 'get-names' } }, '*')
+// Startup command to check correct file
+parent.postMessage({ pluginMessage: { type: 'startup'}}, '*');
 
+// Update the fields corresponding to the newly selected name.
 ui.tabs.home.fields.name_select.onchange = () => {
   const name = ui.tabs.home.fields.name_select.value;
   parent.postMessage({ pluginMessage: { type: 'name-change', name:name } }, '*')
 }
 
+// Open the Home Tab.
 document.getElementById('home_btn').onclick = () => {
   openTab(event,'home_tab');
 }
 
+// Open the Sorting Tab.
 document.getElementById('sorting_btn').onclick = () => {
   openTab(event,'sorting_tab');
 }
 
+// Open the Settings Tab.
 document.getElementById('settings_btn').onclick = () => {
   openTab(event,'settings_tab');
 }
 
+// Change the level_field attributes based on the selected rank_select value.
 document.getElementById('rank').onchange = () => {
   const rank = parseInt(ui.tabs.home.fields.rank_select.value,10);
   const level_field = ui.tabs.home.fields.level_field;
@@ -91,6 +97,7 @@ document.getElementById('rank').onchange = () => {
   
 }
 
+// Change the available magia options selectable based on the selected episode.
 document.getElementById('episode').onchange = () => {
   const episode_select = ui.tabs.home.fields.episode_select;
   const magia_select = ui.tabs.home.fields.magia_select;
@@ -109,6 +116,7 @@ document.getElementById('episode').onchange = () => {
   }
 }
 
+// Create a new Character Display.
 document.getElementById('create').onclick = () => {
   const name = ui.tabs.home.fields.name_select.value;
   const attribute = ui.tabs.home.fields.attribute_select.value;
@@ -122,10 +130,12 @@ document.getElementById('create').onclick = () => {
   parent.postMessage({ pluginMessage: { type: 'create-display', name, attribute, rank, level, magic, magia, episode, full_name, keep_open } }, '*')
 }
 
+// Cancel button pressed, stop plugin.
 document.getElementById('cancel').onclick = () => {
   parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
 }
 
+// Set the fields with the values in display_properties.
 document.getElementById('copy').onclick = () => {
   ui.tabs.home.fields.name_select.value = display_properties.name;
   ui.tabs.home.fields.attribute_select.value = display_properties.attribute;
@@ -136,6 +146,7 @@ document.getElementById('copy').onclick = () => {
   ui.tabs.home.fields.episode_select.value = display_properties.episode;
 }
 
+// Replace the selected Character Display with a new one.
 document.getElementById('update').onclick = () => {
   const name = ui.tabs.home.fields.name_select.value;
   const attribute = ui.tabs.home.fields.attribute_select.value;
@@ -149,20 +160,22 @@ document.getElementById('update').onclick = () => {
   parent.postMessage({ pluginMessage: { type: 'update-display', name, attribute, rank, level, magic, magia, episode, full_name, keep_open } }, '*')
 }
 
-var sortAreString = {name:true,attribute:true,rank:false,level:false,magic:false,magia:false,episode:false,id:false};
+// Constants for if fields are stings.
+const fieldIsString = {name:true,attribute:true,rank:false,level:false,magic:false,magia:false,episode:false,id:false};
 
+// Get the selected sorting order and sort the Characted Displays in the selected frame.
 document.getElementById('sort').onclick = () => {
   var sortBy = [];
   var sort_1_prop = ui.tabs.sorting.sort_by_1_select.value.toLocaleLowerCase();
   var sortBy1 = {
     prop:sort_1_prop,
-    direction: ui.tabs.sorting.sort_order_1_select.value,
-    isString: sortAreString[sort_1_prop]};
+    direction: parseInt(ui.tabs.sorting.sort_order_1_select.value),
+    isString: fieldIsString[sort_1_prop]};
     var sort_2_prop = ui.tabs.sorting.sort_by_2_select.value.toLocaleLowerCase();
   var sortBy2 = {
     prop:sort_2_prop,
-    direction: ui.tabs.sorting.sort_order_2_select.value,
-    isString: sortAreString[sort_2_prop]};
+    direction: parseInt(ui.tabs.sorting.sort_order_2_select.value),
+    isString: fieldIsString[sort_2_prop]};
   sortBy.push(sortBy1);
   sortBy.push(sortBy2);
   parent.postMessage({ pluginMessage: { type: 'sort-displays', sortBy: sortBy } }, '*')
@@ -172,10 +185,12 @@ onmessage = (event) => {
   
   ui.tabs.home.problems.problems_text_area.value = "";
 
+  // Update the problems text area's message.
   if (event.data.pluginMessage.type === 'update-problems') {
     ui.tabs.home.problems.problems_text_area.value = event.data.pluginMessage.message;
   }
 
+  // Set the attribute and available ranks.
   else if (event.data.pluginMessage.type === 'update-attribute-rank') {
     for (var i = 0; i < 5; i++) {
       ui.tabs.home.fields.rank_select.options[i].disabled = event.data.pluginMessage.rank[i];
@@ -193,6 +208,8 @@ onmessage = (event) => {
     }
     ui.tabs.home.fields.rank_select.dispatchEvent(new Event('change'));
   }
+
+  // Add names to the name_select field.
   else if (event.data.pluginMessage.type === 'update-names') {
     event.data.pluginMessage.names.forEach(function(name) {
       ui.tabs.home.fields.name_select.options.add(new Option(name, name, false));
@@ -201,24 +218,36 @@ onmessage = (event) => {
     ui.tabs.home.fields.name_select.dispatchEvent(new Event('change'));
   }
 
+  // Set isplay_properties with the properties of the current selection.
   else if (event.data.pluginMessage.type === 'update-properties') {
     display_properties = event.data.pluginMessage.display_properties
   }
 
+  // Disable a specific button.
   else if (event.data.pluginMessage.type === 'disable-element') {
     var element = (document.getElementById(event.data.pluginMessage.name) as HTMLButtonElement);
     element.disabled = true;
-    element.className += " buttonDisabled";
+    if (!element.className.includes(" buttonDisabled")) {
+      element.className += " buttonDisabled";
+    }
   }
 
+  // Enable a specific button.
   else if (event.data.pluginMessage.type === 'enable-element') {
     var element = (document.getElementById(event.data.pluginMessage.name) as HTMLButtonElement);
     element.disabled = false;
-    element.className = element.className.replace("buttonDisabled", "buttonGray");
+    if (element.className.includes(" buttonDisabled")) {
+      if (element.className.includes(" buttonGray")) {
+        element.className = element.className.replace(" buttonDisabled", "");
+      } else {
+        element.className = element.className.replace(" buttonDisabled", " buttonGray");
+      }
+    }
   }
   
 }
 
+// Press the Create button when Enter key pressed.
 document.addEventListener('keypress', function(event) {
   if (event.keyCode == 13) {
     event.preventDefault();
@@ -226,6 +255,7 @@ document.addEventListener('keypress', function(event) {
   }
 });
 
+// Open the tab tabName and change event's button colour.
 function openTab(event, tabName) {
   var i: number;
   var x = document.getElementsByClassName("tab") as HTMLCollectionOf<HTMLDivElement>;
