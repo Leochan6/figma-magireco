@@ -1,3 +1,5 @@
+import {getNames, getAttributeRanks, getDisplayProperties, selectionSame, sortArrayBy} from "./utils";
+import {setCharacter, setLevel, setMagic, setMagia} from "./character";
 
 // This shows the HTML page in "ui.html".
 figma.showUI(__html__);
@@ -35,14 +37,29 @@ figma.ui.onmessage = msg => {
       }
       selections_array = new_selections_array;
 
-      // enable copy and update buttons
+      
       if (selections_array.length == 1) {
+        // enable copy and update buttons
         if (selections_array[0].masterComponentName == "Character Display") {
           var display_properties = getDisplayProperties(selections_array[0]);
           // console.log(JSON.stringify(display_properties))
           figma.ui.postMessage({type: 'update-properties', display_properties:display_properties });
           figma.ui.postMessage({type: 'enable-element', name: "copy"});
           figma.ui.postMessage({type: 'enable-element', name: "update"});
+        } 
+        // enable sort buttons
+        else if (selections_array[0].type == "FRAME" || selections_array[0].type == "GROUP") {
+          var frame = figma.getNodeById(selections_array[0].id) as FrameNode;
+          var all_character_display = true;
+          frame.children.forEach((child: InstanceNode) => {
+            if (child.masterComponent.name != "Character Display") {
+              all_character_display = false;
+            }
+          });
+          if (all_character_display) {
+            console.log('frame');
+            figma.ui.postMessage({type: 'enable-element', name: "sort"});
+          }
         }
       }
 
@@ -50,6 +67,7 @@ figma.ui.onmessage = msg => {
       if (selections_array.length != 1) {
         figma.ui.postMessage({type: 'disable-element', name: "copy"});
         figma.ui.postMessage({type: 'disable-element', name: "update"});
+        figma.ui.postMessage({type: 'disable-element', name: "sort"});
       }
     }
   }, 1000);
@@ -118,7 +136,7 @@ figma.ui.onmessage = msg => {
     }
   }
 
-  if (msg.type === 'update-display') {
+  else if (msg.type === 'update-display') {
     var selections = figma.currentPage.selection;
     if (selections.length == 1) {
       var valid = parametersValid(msg);
@@ -179,6 +197,11 @@ figma.ui.onmessage = msg => {
   else if (msg.type === 'name-change') {
     var result = getAttributeRanks(msg.name);
     figma.ui.postMessage({type: 'update-attribute-rank', rank: result.ranks, attribute: result.attribute });
+  }
+
+  else if (msg.type === 'sort-displays') {
+    var sortOrder = msg.sortBy;
+    console.log(sortOrder);
   }
   
   // close the plugin.
@@ -252,216 +275,5 @@ function parametersValid (msg) {
   });
   if (!result.rank_valid) result.message += "Rank " + msg.rank + " is not avaliable for " + msg.name + ".\n";
   if (!result.name_valid) result.message += "Name " + msg.name + " is not avaliable.\n";
-  return result;
-}
-
-// swaps instances for the character's image card, frame, stars, attribute, and background.
-function setCharacter (instance: InstanceNode, name: string, attribute: string, rank: string, component_id: string) {
-  var card_component = figma.getNodeById(component_id) as ComponentNode;
-  var character_base_instance = instance.children[2] as InstanceNode;
-  var contents_group = character_base_instance.children[0] as FrameNode;
-  var frame_intance = character_base_instance.children[1] as InstanceNode;
-  var attribute_instance = character_base_instance.children[2] as InstanceNode;
-  var star_instance = character_base_instance.children[3] as InstanceNode;
-  var background_instance = contents_group.children[1] as InstanceNode;
-  var card_instance = contents_group.children[2] as InstanceNode;
-
-  card_instance.masterComponent = card_component;
-
-  if (attribute == "Dark") {
-    attribute_instance.masterComponent  = figma.getNodeById("1:136") as ComponentNode;
-    background_instance.masterComponent = figma.getNodeById("1:113") as ComponentNode;
-  } else if (attribute == "Fire") {
-    attribute_instance.masterComponent  = figma.getNodeById("1:137") as ComponentNode;
-    background_instance.masterComponent = figma.getNodeById("1:114") as ComponentNode;
-  } else if (attribute == "Light") {
-    attribute_instance.masterComponent  = figma.getNodeById("1:138") as ComponentNode;
-    background_instance.masterComponent = figma.getNodeById("1:115") as ComponentNode;
-  } else if (attribute == "Forest") {
-    attribute_instance.masterComponent  = figma.getNodeById("1:139") as ComponentNode;
-    background_instance.masterComponent = figma.getNodeById("1:116") as ComponentNode;
-  } else if (attribute == "Void") {
-    attribute_instance.masterComponent  = figma.getNodeById("1:140") as ComponentNode;
-    background_instance.masterComponent = figma.getNodeById("1:117") as ComponentNode;
-  } else if (attribute == "Water") {
-    attribute_instance.masterComponent  = figma.getNodeById("1:141") as ComponentNode;
-    background_instance.masterComponent = figma.getNodeById("1:118") as ComponentNode;
-  }
-
-  if (rank == "1") {
-    frame_intance.masterComponent = figma.getNodeById("1:97") as ComponentNode;
-    star_instance.masterComponent = figma.getNodeById("1:124") as ComponentNode;
-  }
-  else if (rank == "2") {
-    frame_intance.masterComponent = figma.getNodeById("1:98") as ComponentNode;
-    star_instance.masterComponent = figma.getNodeById("1:125") as ComponentNode;
-  }
-  else if (rank == "3") {
-    frame_intance.masterComponent = figma.getNodeById("1:99") as ComponentNode;
-    star_instance.masterComponent = figma.getNodeById("1:126") as ComponentNode;
-  }
-  else if (rank == "4") {
-    frame_intance.masterComponent = figma.getNodeById("1:100") as ComponentNode;
-    star_instance.masterComponent = figma.getNodeById("1:127") as ComponentNode;
-  }
-  else if (rank == "5") {
-    frame_intance.masterComponent = figma.getNodeById("1:101") as ComponentNode;
-    star_instance.masterComponent = figma.getNodeById("1:128") as ComponentNode;
-  }
-
-};
-
-// sets the experience level text box.
-function setLevel (instance: InstanceNode, level: string) {
-  var text_all = instance.children[3] as TextNode;
-  var level_fill = text_all.getRangeFills(0, 4) as Paint[]
-  var value_fill = text_all.getRangeFills(5, text_all.characters.length) as Paint[]
-  var value_size = text_all.getRangeFontSize(5, text_all.characters.length) as number;
-  text_all.characters = "Lvl. " + level;
-  text_all.setRangeFills(0, 4, level_fill);
-  text_all.setRangeFills(5, text_all.characters.length, value_fill);
-  text_all.setRangeFontSize(5, text_all.characters.length, value_size);
-};
-
-// sets the magic level.
-function setMagic (instance: InstanceNode, magic: string) {
-  var magic_instance = instance.children[1] as InstanceNode;
-  if      (magic == "0")   magic_instance.masterComponent = figma.getNodeById("3:896") as ComponentNode;
-  else if (magic == "1")   magic_instance.masterComponent = figma.getNodeById("3:13") as ComponentNode;
-  else if (magic == "2")   magic_instance.masterComponent = figma.getNodeById("7:470") as ComponentNode;
-  else if (magic == "3")   magic_instance.masterComponent = figma.getNodeById("7:477") as ComponentNode;
-};
-
-// sets the magia and episode level.
-function setMagia (instance: InstanceNode, magia: string, episode: string) {
-  var magia_instance = instance.children[0] as InstanceNode;
-  if      (magia == "1" && episode == "1")   magia_instance.masterComponent = figma.getNodeById("10:1993") as ComponentNode;
-  else if (magia == "1" && episode == "2")   magia_instance.masterComponent = figma.getNodeById("10:1960") as ComponentNode;
-  else if (magia == "1" && episode == "3")   magia_instance.masterComponent = figma.getNodeById("10:1911") as ComponentNode;
-  else if (magia == "1" && episode == "4")   magia_instance.masterComponent = figma.getNodeById("10:1846") as ComponentNode;
-  else if (magia == "1" && episode == "5")   magia_instance.masterComponent = figma.getNodeById("3:41") as ComponentNode;
-  else if (magia == "2" && episode == "2")   magia_instance.masterComponent = figma.getNodeById("10:1961") as ComponentNode;
-  else if (magia == "2" && episode == "3")   magia_instance.masterComponent = figma.getNodeById("10:1912") as ComponentNode;
-  else if (magia == "2" && episode == "4")   magia_instance.masterComponent = figma.getNodeById("10:1847") as ComponentNode;
-  else if (magia == "2" && episode == "5")   magia_instance.masterComponent = figma.getNodeById("7:496") as ComponentNode;
-  else if (magia == "3" && episode == "3")   magia_instance.masterComponent = figma.getNodeById("10:1913") as ComponentNode;
-  else if (magia == "3" && episode == "4")   magia_instance.masterComponent = figma.getNodeById("10:1848") as ComponentNode;
-  else if (magia == "3" && episode == "5")   magia_instance.masterComponent = figma.getNodeById("7:507") as ComponentNode;
-  else if (magia == "4" && episode == "4")   magia_instance.masterComponent = figma.getNodeById("10:1849") as ComponentNode;
-  else if (magia == "4" && episode == "5")   magia_instance.masterComponent = figma.getNodeById("7:514") as ComponentNode;
-  else if (magia == "5" && episode == "5")   magia_instance.masterComponent = figma.getNodeById("7:521") as ComponentNode;
-};
-
-// gets the names of all the Magical Girls in character_image frame and sorts them alphabetically.
-function getNames () {
-  var names = [];
-  var character_image = figma.getNodeById("1:142") as FrameNode;
-  character_image.children.forEach(function(child: ComponentNode) {
-    var name = child.name;
-    name = name.split("/")[1];
-    if (names.indexOf(name) == -1) {
-      names.push(name);
-    }
-  });
-  names.sort();
-  return names;
-}
-
-// gets the attribute and the available ranks for the Magical Girls name.
-function getAttributeRanks (name: string) {
-  var result = {attribute:"",ranks:[true,true,true,true,true]};
-  var character_image = figma.getNodeById("1:142") as FrameNode;
-  character_image.children.forEach(function(child: ComponentNode) {
-    var child_name = child.name;
-    var child_name_split = child_name.split("/");
-    if (child_name_split[1] == name) {
-      var description = JSON.parse(child.description);
-      result.attribute = description["attribute"];
-      var rank = parseInt(child_name_split[2].split(" ")[1], 10);
-      result.ranks[rank-1] = false;
-    }
-  });
-  return result;
-}
-
-// gets the properties of the current selection.
-function getDisplayProperties (selection_properties) {
-  var display_properties = {};
-  var instance = figma.getNodeById(selection_properties.id) as InstanceNode;
-  var magia_instance = instance.children[0] as InstanceNode;
-  var magic_instance = instance.children[1] as InstanceNode;
-  var characted_base_instance = instance.children[2] as InstanceNode;
-  var contents_group = characted_base_instance.children[0] as FrameNode;
-  var level_text = instance.children[3] as TextNode;
-
-  
-  // display_properties["id"] = JSON.parse(card_instance.masterComponent.description)["id"];
-
-  var card_instance = contents_group.children[2] as InstanceNode
-  var name = card_instance.masterComponent.name.split("/")[1];
-  display_properties["name"] = name;
-
-  var attribute_instance = characted_base_instance.children[2] as InstanceNode
-  var attribute = attribute_instance.masterComponent.name.split("/")[1];
-  display_properties["attribute"] = attribute;
-
-  var frame_instance = characted_base_instance.children[1] as InstanceNode
-  var rank = frame_instance.masterComponent.name.split(" ")[1];
-  display_properties["rank"] = rank;
-
-  var level = level_text.characters.split(" ")[1];
-  display_properties["level"] = level;
-
-  var magic = magic_instance.masterComponent.name.split(" ")[1];
-  display_properties["magic"] = magic;
-
-  var magia_episode = magia_instance.masterComponent.name.split(" ")[1].split("-");
-  display_properties["magia"] = magia_episode[0];
-  display_properties["episode"] = magia_episode[1];
-
-  display_properties["id"] = JSON.parse(card_instance.masterComponent.description)["id"];
-
-  return display_properties;
-}
-
-function selectionSame(x, y) {
-  var selectionAreSame = true;
-  if (x.length != y.length) return false;
-  try {
-    for (var index in x) {
-      for(var propertyName in x[index]) {
-        if(x[index][propertyName] !== y[index][propertyName]) {
-          selectionAreSame = false;
-          break;
-        }
-      }
-    }
-  }
-  catch(err) {
-    selectionAreSame = false;
-  }  
-  return selectionAreSame;
-}
-
-/**
- * https://bytemaster.io/javascript-object-multi-property-sort
- * Function to be passed into array.sort() with a array storing the prop, direction, and isString.
- * let sortBy = [{
- *   prop:'grade',
- *   direction: -1,
- *   isString: false
- * },{
- *   prop:'lastName',
- *   direction: 1,
- *   isString: true
- * }];
- */ 
-function sortArrayBy(a, b, sortBy) {
-  let i = 0, result = 0;
-  while (i < sortBy.length && result === 0) {
-    if (sortBy[i].isString) result = sortBy[i].direction*(a[sortBy[i].prop].toString() < b[sortBy[i].prop].toString() ? -1 : (a[sortBy[i].prop].toString() > b[sortBy[i].prop].toString() ? 1 : 0));
-    else result = sortBy[i].direction*(parseInt((a[sortBy[i].prop]).toString()) < parseInt((b[sortBy[i].prop]).toString()) ? -1 : (parseInt((a[sortBy[i].prop]).toString()) > parseInt((b[sortBy[i].prop]).toString()) ? 1 : 0));
-    i++;
-  }
   return result;
 }

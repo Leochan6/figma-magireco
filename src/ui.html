@@ -80,8 +80,39 @@
                 <textarea id="problems" value="None" rows="10" cols="53" resize="none" readonly>None</textarea>
             </div>
         </div>
-        <div id="sorting_tab" class="tab">
-
+        <div id="sorting_tab" class="tab" style="display:none">
+            <div id="sorting_fields" align="left">
+                <table id="sort_table">
+                    <tr>
+                        <td>1st Sort By</td>
+                        <td><select id="sort_by_1_select">
+                            <option selectedvalue="Level">Level</option>
+                            <option value="Rank">Rank</option>
+                            <option value="Attribute">Attribute</option>
+                            <option value="Id">Id</option>
+                        </select></td>
+                        <td><select id="sort_order_1_select">
+                            <option selectedvalue="1">Ascending</option>
+                            <option value="-1">Decending</option>
+                        </select></td>
+                    </tr>
+                    <tr>
+                        <td>2nd Sort By</td>
+                        <td><select id="sort_by_2_select">
+                            <option selected value></option>
+                            <option value="Level">Level</option>
+                            <option value="Rank">Rank</option>
+                            <option value="Attribute">Attribute</option>
+                            <option value="Id">Id</option>
+                        </select></td>
+                        <td><select id="sort_order_2_select">
+                            <option selectedvalue="1">Ascending</option>
+                            <option value="-1">Decending</option>
+                        </select></td>
+                    </tr>
+                </table>
+                <button id="sort" class="button buttonDisabled" disabled>Sort Selected</button>
+            </div>
         </div>
         <div id="settings_tab" class="tab" style="display:none">
             <p>Keep Dialog Open: <input id="keep_open" type="checkbox" checked></p>

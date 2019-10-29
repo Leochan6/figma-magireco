@@ -32,9 +32,12 @@ const ui = {
         problems_text_area: document.getElementById('problems') as HTMLTextAreaElement,
       }
     },
-    sorting_tab:              document.getElementById('sorting_tab') as HTMLDivElement,
+    sorting_tab:            document.getElementById('sorting_tab') as HTMLDivElement,
     sorting: {
-      
+      sort_by_1_select:     document.getElementById('sort_by_1_select') as HTMLSelectElement,
+      sort_by_2_select:     document.getElementById('sort_by_2_select') as HTMLSelectElement,
+      sort_order_1_select:  document.getElementById('sort_by_1_select') as HTMLSelectElement,
+      sort_order_2_select:  document.getElementById('sort_by_2_select') as HTMLSelectElement,
     },
     settings_tab:           document.getElementById('settings_tab') as HTMLDivElement,
     settings: {
@@ -144,6 +147,25 @@ document.getElementById('update').onclick = () => {
   const full_name = ui.tabs.settings.full_name_checkbox.checked;
   const keep_open = ui.tabs.settings.keep_open_checkbox.checked;
   parent.postMessage({ pluginMessage: { type: 'update-display', name, attribute, rank, level, magic, magia, episode, full_name, keep_open } }, '*')
+}
+
+var sortAreString = {name:true,attribute:true,rank:false,level:false,magic:false,magia:false,episode:false,id:false};
+
+document.getElementById('sort').onclick = () => {
+  var sortBy = [];
+  var sort_1_prop = ui.tabs.sorting.sort_by_1_select.value.toLocaleLowerCase();
+  var sortBy1 = {
+    prop:sort_1_prop,
+    direction: ui.tabs.sorting.sort_order_1_select.value,
+    isString: sortAreString[sort_1_prop]};
+    var sort_2_prop = ui.tabs.sorting.sort_by_2_select.value.toLocaleLowerCase();
+  var sortBy2 = {
+    prop:sort_2_prop,
+    direction: ui.tabs.sorting.sort_order_2_select.value,
+    isString: sortAreString[sort_2_prop]};
+  sortBy.push(sortBy1);
+  sortBy.push(sortBy2);
+  parent.postMessage({ pluginMessage: { type: 'sort-displays', sortBy: sortBy } }, '*')
 }
 
 onmessage = (event) => {
