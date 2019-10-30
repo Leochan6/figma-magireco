@@ -54,6 +54,7 @@ function setLocation (instance: InstanceNode) {
           selection.parent.insertChild(i, instance);
         }
       }
+      figma.currentPage.selection = [instance];
     }
   } 
   else if (selection.type == "FRAME" || selection.type == "GROUP" || selection.type == "COMPONENT") {

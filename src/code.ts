@@ -81,7 +81,6 @@ figma.ui.onmessage = msg => {
     var instance = createDisplay(msg) as InstanceNode;
     if (instance !== null) {
       setLocation(instance);
-      figma.currentPage.selection = [instance];
     }
   }
 
