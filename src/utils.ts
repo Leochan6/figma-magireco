@@ -45,14 +45,13 @@ function getCharacterId (name: string) {
 }
 
 // gets the properties of the current selection.
-function getDisplayProperties (selection_properties) {
+function getDisplayProperties (selection: InstanceNode) {
   var display_properties = {};
-  var instance = figma.getNodeById(selection_properties.nodeId) as InstanceNode;
-  var magia_instance = instance.children[0] as InstanceNode;
-  var magic_instance = instance.children[1] as InstanceNode;
-  var characted_base_instance = instance.children[2] as InstanceNode;
+  var magia_instance = selection.children[0] as InstanceNode;
+  var magic_instance = selection.children[1] as InstanceNode;
+  var characted_base_instance = selection.children[2] as InstanceNode;
   var contents_group = characted_base_instance.children[0] as FrameNode;
-  var level_text = instance.children[3] as TextNode;
+  var level_text = selection.children[3] as TextNode;
 
   var card_instance = contents_group.children[2] as InstanceNode
   var name = card_instance.masterComponent.name.split("/")[1];
