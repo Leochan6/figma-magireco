@@ -1,6 +1,6 @@
 # Magia Record Character Grid Creator Interface
 
-![Artwork](https://github.com/Leochan6/figma-magireco/readme/Banner.png)
+![Banner](https://raw.githubusercontent.com/Leochan6/figma-magireco/master/readme/Banner.png)
 
 This plugin is for create a grid view of you Magical Girls in the game [Magia Record: Puella Magi Madoka Magica Side Story](https://magiarecord-en.com/). The game does not include a good overview for displaying all you owned Magical Girls and how levelled they are, so this plugin create that view as image for easy sharing.
 
@@ -37,18 +37,29 @@ This plugin is for create a grid view of you Magical Girls in the game [Magia Re
 4. Press `Create`.
 
 ## Gallery
+Home Screen:
 
-![Home Screen](https://github.com/Leochan6/figma-magireco/readme/Home.png)
+![Home Screen](https://raw.githubusercontent.com/Leochan6/figma-magireco/master/readme/Home.png)
 
-![Name Select](https://github.com/Leochan6/figma-magireco/readme/SelectName.png)
+Name Select:
 
-![Settings](https://github.com/Leochan6/figma-magireco/readme/Settings.png)
+![Name Select](https://raw.githubusercontent.com/Leochan6/figma-magireco/master/readme/SelectName.png)
 
-![Sample List 1](https://github.com/Leochan6/figma-magireco/readme/SampleList1.png)
+Settings:
 
-![Sample List 2](https://github.com/Leochan6/figma-magireco/readme/SampleList2.png)
+![Settings](https://raw.githubusercontent.com/Leochan6/figma-magireco/master/readme/Settings.png)
 
-![Sample List 3](https://github.com/Leochan6/figma-magireco/readme/SampleList3.png)
+Sample List 1:
+
+![Sample List 1](https://raw.githubusercontent.com/Leochan6/figma-magireco/master/readme/SampleList1.png)
+
+Sample List 2:
+
+![Sample List 2](https://raw.githubusercontent.com/Leochan6/figma-magireco/master/readme/SampleList2.png)
+
+Sample List 3:
+
+![Sample List 3](https://raw.githubusercontent.com/Leochan6/figma-magireco/master/readme/SampleList3.png)
 
 
 ### Manual Installation Instructions
