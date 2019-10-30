@@ -30,6 +30,20 @@ function getAttributeRanks (name: string) {
   return result;
 }
 
+function getCharacterId (name: string) {
+  var character_image = figma.getNodeById("1:142") as FrameNode;
+  var result = "0"
+  character_image.children.forEach(function(child: ComponentNode) {
+    var child_name = child.name;
+    var child_name_split = child_name.split("/");
+    if (child_name_split[1] == name) {
+      var description = JSON.parse(child.description);
+      result = description["id"];
+    }
+  });
+  return result;
+}
+
 // gets the properties of the current selection.
 function getDisplayProperties (selection_properties) {
   var display_properties = {};
@@ -156,4 +170,4 @@ function sortArrayBy(a, b, sortBy) {
   return result;
 }
 
-export {getNames, getAttributeRanks, getDisplayProperties, selectionSame, selectionEquals, sortArrayBy};
+export {getNames, getAttributeRanks, getCharacterId, getDisplayProperties, selectionSame, selectionEquals, sortArrayBy};

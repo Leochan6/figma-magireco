@@ -2,12 +2,13 @@
     <div id="tab_bar" class="tab-bar" style="background-color:#2c2c2c" align="left">
         <button id="home_btn" class="tablink button buttonBlue" >Home</button>
         <button id="sorting_btn" class="tablink button buttonGray" >Sorting</button>
+        <button id="create_list_btn" class="tablink button buttonGray" >Create List</button>
         <button id="settings_btn" class="tablink button buttonGray" >Settings</button>
     </div>
     <div id="tabs" style="margin:20px">
         <div id="home_tab" class="tab">
             <div id="home_fields" align="left">
-                <table id="fields_table">
+                <table id="fields_table" width=100%>
                     <tr>
                         <td>Name:</td>
                         <td><select id="name"></select></td>
@@ -75,10 +76,6 @@
                 <button id="copy" class="button buttonDisabled" disabled>Copy Selected</button>
                 <button id="cancel" class="button buttonGray" disabled>Cancel</button>
             </div>
-            <div id="home_problems" align="left">
-                <p style="font-size:16px">Problems:</p>
-                <textarea id="problems" value="None" rows="10" cols="53" resize="none" readonly>None</textarea>
-            </div>
         </div>
         <div id="sorting_tab" class="tab" style="display:none">
             <div id="sorting_fields" align="left">
@@ -113,9 +110,111 @@
                 <button id="sort" class="button buttonDisabled" disabled>Sort Selected</button>
             </div>
         </div>
+        <div id="create_list_tab" class="tab" style="display:none">
+            <div id="create_list_fields">
+                <table id="create_list_fields_table" width=100%>
+                    <tr>
+                        <td>Name:</td>
+                        <td><select id="create_list_name"></select></td>
+                    </tr>
+                    <tr>
+                        <td>Attribute: 
+                        <td><select id="create_list_attribute">
+                            <option value="Dark">Dark</option>
+                            <option value="Fire">Fire</option>
+                            <option selected value="Light">Light</option>
+                            <option value="Forest">Forest</option>
+                            <option value="Void">Void</option>
+                            <option value="Water">Water</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Rank:</td>
+                        <td><select id="create_list_rank">
+                            <option value="1">1</option>
+                            <option selected value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select></td> 
+                    </tr>
+                    <tr>    
+                        <td>Experience Level:</td> 
+                        <td><input id="create_list_level" class="custom-input" type="number" value=1 maxlength="3" size=3 min=1 max=100 border="2px solid black"></td> 
+                    </tr>
+                    <tr>    
+                        <td>Magic Level:</td> 
+                        <td><select id="create_list_magic">
+                            <option selected value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select></td> 
+                    </tr>
+                    <tr>
+                        <td>Magia Level:</td> 
+                        <td><select id="create_list_magia"> 
+                            <option selectedvalue="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select></td> 
+                    </tr>
+                    <tr>
+                        <td>Episode Level:</td> 
+                        <td><select id="create_list_episode">
+                            <option selectedvalue="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select></td>
+                    </tr>
+                </table>
+            </div>
+            <hr>
+            <div id="create_list_create_fields">
+                <table id="create_list_create_fields_table">
+                    <tr>
+                        <td>List Name:</td>
+                        <td><input id="create_list_name" value="My List"></td>
+                    </tr>
+                    <tr>
+                        <td>Rows:</td>
+                        <td><input id="create_list_rows" class="custom-input" type="number" value=5 maxlength="3" size=3 min=1 max=100 border="2px solid black"></td> 
+                    </tr>
+                    <tr>
+                        <td>Cols:</td>
+                        <td><input id="create_list_cols" class="custom-input" type="number" value=5 maxlength="3" size=3 min=1 max=100 border="2px solid black"></td> 
+                    </tr>
+                </table>
+            </div>
+            <div id="create_list_buttons">
+                <button id="create_list_add" class="button buttonGray">Add Row</button>
+                <button id="create_list_remove" class="button buttonGray">Remove Row</button>
+                <button id="create_list_copy" class="button buttonGray">Copy Selected</button>
+                <button id="create_list_create" class="button buttonGray">Create</button>
+            </div>
+            <div id="create_list_table">
+                <table id=create_list_data_table class="tableList" width=100%>
+                    <tr class="tableList"> 
+                        <th id="name_col" class="tableList">Name</th> 
+                        <th id="attribute_col" class="tableList">Attribute</th> 
+                        <th id="rank_col" class="tableList">Rank</th> 
+                        <th id="level_col" class="tableList">Level</th> 
+                        <th id="magia_col" class="tableList">Magic</th> 
+                        <th id="magic_col" class="tableList">Magia</th> 
+                        <th id="episode_col" class="tableList">Episode</th> 
+                        <th id="id_col" class="tableList">Id</th> 
+                    </tr> 
+                </table>
+            </div>
         <div id="settings_tab" class="tab" style="display:none">
             <p>Keep Dialog Open: <input id="keep_open" type="checkbox" checked></p>
             <p>Full Component Name: <input id="full_name" type="checkbox"></p>
         </div>
     </div>
 </body>
+

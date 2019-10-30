@@ -1,9 +1,9 @@
-import {getNames, getAttributeRanks, getDisplayProperties, selectionSame, selectionEquals, sortArrayBy} from "./utils";
+import {getNames, getAttributeRanks, getCharacterId, getDisplayProperties, selectionSame, selectionEquals, sortArrayBy} from "./utils";
 import {setCharacter, setLevel, setMagic, setMagia} from "./character";
 
 // This shows the HTML page in "ui.html".
 figma.showUI(__html__);
-figma.ui.resize(500, 600);
+figma.ui.resize(500, 500);
 
 // Calls to "parent.postMessage" from within the HTML page will trigger this
 // callback. The callback will be passed the "pluginMessage" property of the
@@ -17,6 +17,8 @@ var sortBy = [{  prop:'level',     direction: -1,   isString: false },
 
 // Stores the current selection.
 var selections_array = [];
+
+var table_data = [];
 
 figma.ui.onmessage = msg => {
 
@@ -56,7 +58,6 @@ figma.ui.onmessage = msg => {
           var display_properties = getDisplayProperties(selections_array[0]);
           // console.log(JSON.stringify(display_properties))
           figma.ui.postMessage({type: 'update-properties', display_properties:display_properties });
-          console.log("enable copy update");
           figma.ui.postMessage({type: 'enable-element', name: "copy"});
           figma.ui.postMessage({type: 'enable-element', name: "update"});
         } 
@@ -98,7 +99,8 @@ figma.ui.onmessage = msg => {
     else {
       // get the names and set the name select field.
       var names = getNames();
-      figma.ui.postMessage({type: 'update-names', names:names });
+      figma.ui.postMessage({type: 'update-names', names:names, elementId:"name" });
+      figma.ui.postMessage({type: 'update-names', names:names, elementId:"create_list_name" });
     }
   }
   
@@ -161,7 +163,7 @@ figma.ui.onmessage = msg => {
       console.log(msg);
       console.log(valid);
       // send invalid message to dialog.
-      figma.ui.postMessage({type: 'update-problems', message:valid.message });
+      alert(valid.message);
     }
   }
 
@@ -208,23 +210,41 @@ figma.ui.onmessage = msg => {
         console.log(msg);
         console.log(valid);
         // send invalid message to dialog.
-        figma.ui.postMessage({type: 'update-problems', message:valid.message });
+        alert(valid.message);
       } 
     } else {
-      // send problem message to dialog for no display selected.
-      figma.ui.postMessage({type: 'update-problems', message:"One Character Display must be selected to update." });
+      // send toast for no display selected.
+      alert("One Character Display must be selected to update.");
     }
+  }
+
+  else if (msg.type === 'table-get-id') {
+    var row_data = msg.row_data;
+    row_data["id"] = getCharacterId(row_data.name);
+    table_data.push(row_data);
+    figma.ui.postMessage({type: 'table-add-row', row_data:row_data });
+  }
+
+  else if (msg.type === 'table-data-remove-row') {
+    var row_data = table_data.pop();
+    var row_index = table_data.length;
+    figma.ui.postMessage({type: 'table-remove-row', row_data:row_data, row_index:row_index });
   }
 
   // get the attribute and avaliable ranks for the name
   else if (msg.type === 'name-change') {
     var result = getAttributeRanks(msg.name);
-    figma.ui.postMessage({type: 'update-attribute-rank', rank: result.ranks, attribute: result.attribute });
+    figma.ui.postMessage({type: 'update-attribute-rank', rank: result.ranks, attribute: result.attribute, tab:msg.tab });
   }
 
   else if (msg.type === 'sort-displays') {
     var sortOrder = msg.sortBy;
     console.log(sortOrder);
+  }
+
+  // create a new frame with the contents of the list.
+  else if (msg.type === 'table-to-list') {
+    
   }
   
   // close the plugin.
