@@ -64,7 +64,6 @@ figma.ui.onmessage = msg => {
   if (msg.type === 'startup') {
     if (figma.getNodeById("3:908") === null || figma.getNodeById("3:908").name != "Character Display") {
       var message = "The current file is not 'Magia Record Character Grids'. Please duplicate and open the Figma Project as indicated in the plugin page before using this plugin.";
-      alert(message);
       figma.closePlugin(message);
     }
     else {
