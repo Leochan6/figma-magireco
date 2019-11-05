@@ -2,7 +2,7 @@
 
 ![Banner](https://raw.githubusercontent.com/Leochan6/figma-magireco/master/readme/Banner.png)
 
-This plugin is for create a grid view of you Magical Girls in the game [Magia Record: Puella Magi Madoka Magica Side Story](https://magiarecord-en.com/). The game does not include a good overview for displaying all you owned Magical Girls and how levelled they are, so this plugin create that view as image for easy sharing.
+This plugin is for creating a grid view of your Magical Girls in the game [Magia Record: Puella Magi Madoka Magica Side Story](https://magiarecord-en.com/). The game does not include a good overview for displaying all you owned Magical Girls and how awakened and upgraded they are, so this plugin creates that view as image for easy sharing.
 
 ## Installing the Plugin
 1. Duplicate the Figma project [Magia Record Character Grids](https://www.figma.com/file/jcgWY0YGzPbAwBp47LV3oL/Magia-Record-Character-Grids). 
