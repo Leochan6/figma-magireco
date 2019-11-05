@@ -26,7 +26,7 @@ This plugin is for create a grid view of you Magical Girls in the game [Magia Re
 ## Usage
 
 ### Create new Character Display
-1. Eiher select an existing instance or frame (can be the document itself)
+1. Either select an existing instance or frame (can be the document itself)
 2. Select the properties you want.
 3. Press `Create`.
 
