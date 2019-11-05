@@ -9,7 +9,7 @@ This plugin is for create a grid view of you Magical Girls in the game [Magia Re
 
     ![Duplicate to your Drafts](https://raw.githubusercontent.com/Leochan6/figma-magireco/master/readme/DuplicateToDrafts.png)
 
-2. Install the plugin and open the Magia Record Character Grids Project.
+2. [Install the plugin](https://www.figma.com/c/plugin/764389386376321679/Magia-Record-Character-Grid-Creator-Interface) and open the Magia Record Character Grids Project.
 3. Right click on the background or go to the hamburger menu and select **Plugins** > **Magia Record Character Grid Creator Interface**
 
     ![Run Plugin](https://raw.githubusercontent.com/Leochan6/figma-magireco/master/readme/RunPlugin.png)
