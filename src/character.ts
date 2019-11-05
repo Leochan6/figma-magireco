@@ -41,8 +41,6 @@ function updateDisplay (instance: InstanceNode, parameters) {
 function setLocation (instance: InstanceNode) {
   if (figma.currentPage.selection.length != 1) return;
   var selection = figma.currentPage.selection[0];
-  console.log(selection);
-  console.log(selection.x, selection.y);
   if (selection.type == "INSTANCE") {
     if (selection.parent.type == "FRAME" || selection.parent.type == "GROUP" || selection.parent.type == "COMPONENT" || selection.parent.type == "PAGE" || selection.parent.type == "DOCUMENT") {
       // set the instance x and y value.
@@ -67,9 +65,13 @@ function setLocation (instance: InstanceNode) {
       if (x_next < selection.width && y_next < selection.height) {
         instance.x = x_next;
         instance.y = y_next;
-      } else if (x_next >= selection.width) {
+      } else if (x_next >= selection.width && last_child.y + instance.height < selection.height) {
         instance.x = 0;
         instance.y = last_child.y + instance.height;
+      } else {
+        figma.notify("No more Character Displays can be added to the selection.", {timeout: 10000});
+        instance.remove();
+        return;
       }
     }
     selection.insertChild(0, instance);
@@ -137,10 +139,12 @@ function setLevel (instance: InstanceNode, level: string) {
   var text_all = instance.children[3] as TextNode;
   var level_fill = text_all.getRangeFills(0, 4) as Paint[]
   var value_fill = text_all.getRangeFills(5, text_all.characters.length) as Paint[]
+  var level_size = text_all.getRangeFontSize(0, 4) as number;
   var value_size = text_all.getRangeFontSize(5, text_all.characters.length) as number;
   text_all.characters = "Lvl. " + level;
   text_all.setRangeFills(0, 4, level_fill);
   text_all.setRangeFills(5, text_all.characters.length, value_fill);
+  text_all.setRangeFontSize(0, 4, level_size);
   text_all.setRangeFontSize(5, text_all.characters.length, value_size);
 };
 
