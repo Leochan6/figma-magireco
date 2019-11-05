@@ -77,7 +77,7 @@ parent.postMessage({ pluginMessage: { type: 'startup'}}, '*');
 // Update the fields corresponding to the newly selected name.
 ui.tabs.home.fields.name_select.onchange = () => {
   const name = ui.tabs.home.fields.name_select.value;
-  parent.postMessage({ pluginMessage: { type: 'name-change', name:name, tab:"home" } }, '*')
+  parent.postMessage({ pluginMessage: { type: 'name-change', name:name, tab:"home", copied:false } }, '*')
 }
 
 // Update the fields corresponding to the newly selected name.
@@ -131,69 +131,6 @@ document.getElementById('rank').onchange = () => {
   }
 }
 
-// Change the level_field attributes based on the selected rank_select value.
-document.getElementById('rank').onchange = () => {
-  const rank = parseInt(ui.tabs.create_list.fields.rank_select.value,10);
-  const level_field = ui.tabs.create_list.fields.level_field;
-  if (rank == 1) {
-    level_field.max = '40';
-    if (parseInt(level_field.value) > 40) level_field.value = '40';
-  }
-  else if (rank == 2) {
-    level_field.max = '50';
-    if (parseInt(level_field.value) > 50) level_field.value = '50';
-  }
-  else if (rank == 3) {
-    level_field.max = '60';
-    if (parseInt(level_field.value) > 60) level_field.value = '60';
-  }
-  else if (rank == 4) {
-    level_field.max = '80';
-    if (parseInt(level_field.value) > 80) level_field.value = '80';
-  }
-  else if (rank == 5) {
-    level_field.max = '100';
-  }
-}
-
-// Change the available magia options selectable based on the selected episode for home.
-document.getElementById('episode').onchange = () => {
-  const episode_select = ui.tabs.home.fields.episode_select;
-  const magia_select = ui.tabs.home.fields.magia_select;
-  const episode = parseInt(episode_select.value,10);
-  const magia = parseInt(magia_select.value,10);
-  for (var i = 4; i > episode-1; i--) {
-    magia_select.options[i].disabled = true;
-  }
-  for (var i = episode-1; i >= 0; i--) {
-    magia_select.options[i].disabled = false;
-  }
-  for (var i = 4; i > episode-1; i--) {
-    if (magia_select.value == (i+1).toString(10)) {
-      magia_select.value = (episode).toString(10);
-    }
-  }
-}
-
-// Change the available magia options selectable based on the selected episode for create_list.
-document.getElementById('episode').onchange = () => {
-  const episode_select = ui.tabs.create_list.fields.episode_select;
-  const magia_select = ui.tabs.create_list.fields.magia_select;
-  const episode = parseInt(episode_select.value,10);
-  const magia = parseInt(magia_select.value,10);
-  for (var i = 4; i > episode-1; i--) {
-    magia_select.options[i].disabled = true;
-  }
-  for (var i = episode-1; i >= 0; i--) {
-    magia_select.options[i].disabled = false;
-  }
-  for (var i = 4; i > episode-1; i--) {
-    if (magia_select.value == (i+1).toString(10)) {
-      magia_select.value = (episode).toString(10);
-    }
-  }
-}
-
 // Create a new Character Display.
 document.getElementById('create').onclick = () => {
   const name = ui.tabs.home.fields.name_select.value;
@@ -216,12 +153,8 @@ document.getElementById('cancel').onclick = () => {
 // Set the fields with the values in display_properties.
 document.getElementById('copy').onclick = () => {
   ui.tabs.home.fields.name_select.value = display_properties.name;
-  ui.tabs.home.fields.attribute_select.value = display_properties.attribute;
-  ui.tabs.home.fields.rank_select.value = display_properties.rank;
-  ui.tabs.home.fields.level_field.value = display_properties.level;
-  ui.tabs.home.fields.magic_select.value = display_properties.magic;
-  ui.tabs.home.fields.magia_select.value = display_properties.magia;
-  ui.tabs.home.fields.episode_select.value = display_properties.episode;
+  enableAllOptions();
+  parent.postMessage({ pluginMessage: { type: 'name-change', name:display_properties.name, tab:"home", copied:true } }, '*')
 }
 
 // Replace the selected Character Display with a new one.
@@ -318,21 +251,18 @@ onmessage = (event) => {
       rank_select = ui.tabs.create_list.fields.rank_select;
       attribute_select = ui.tabs.create_list.fields.attribute_select;
     }
-    for (var i = 0; i < 5; i++) {
+    // disable if rank not available and set value equal to lowest rank.
+    for (var i = 4; i >= 0; i--) {
       rank_select.options[i].disabled = event.data.pluginMessage.rank[i];
-      if (!event.data.pluginMessage.rank[i] && event.data.pluginMessage.rank[i-1]) {
-        rank_select.value = (i+1).toString(10);
-      }
+      if (!event.data.pluginMessage.rank[i]) rank_select.value = (i+1).toString(10);
     }
     attribute_select.value = event.data.pluginMessage.attribute;
+    // disable if not attribute
     for (var i = 0; i < 6; i++) {
-      if (attribute_select.options[i].value != event.data.pluginMessage.attribute) {
-        attribute_select.options[i].disabled = true;
-      } else {
-        attribute_select.options[i].disabled = false;
-      }
+      attribute_select.options[i].disabled = attribute_select.options[i].value != event.data.pluginMessage.attribute;
     }
-    rank_select.dispatchEvent(new Event('change'));
+    // set the fields if this is called from a copy.
+    if (event.data.pluginMessage.copied) updateCopied();
   }
 
   // Add names to the name_select field.
@@ -408,6 +338,25 @@ function openTab(event, tabName) {
   event.currentTarget.className = event.currentTarget.className.replace("buttonGray", "buttonBlue");
 }
   
+// Set the rest of the fields after name copied updated.
+function updateCopied() {
+  ui.tabs.home.fields.attribute_select.value = display_properties.attribute;
+  ui.tabs.home.fields.rank_select.value = display_properties.rank;
+  ui.tabs.home.fields.level_field.value = display_properties.level;
+  ui.tabs.home.fields.magic_select.value = display_properties.magic;
+  ui.tabs.home.fields.magia_select.value = display_properties.magia;
+  ui.tabs.home.fields.episode_select.value = display_properties.episode;
+}
+
+function enableAllOptions() {
+  for (var i = 0; i < 6; i++) {
+    ui.tabs.home.fields.attribute_select.options[i].disabled = false;
+  }
+  for (var i = 0; i < 5; i++) {
+    ui.tabs.home.fields.rank_select.options[i].disabled = false;
+  }
+}
+
 function add_row(row_data) {
   var table = document.getElementById('create_list_data_table') as HTMLTableElement
   var new_row = table.insertRow(-1);

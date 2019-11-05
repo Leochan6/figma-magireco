@@ -136,15 +136,18 @@ function setCharacter (instance: InstanceNode, attribute: string, rank: string, 
 
 // sets the experience level text box.
 function setLevel (instance: InstanceNode, level: string) {
+  var character_display_master = figma.getNodeById("3:908") as ComponentNode;
+  var master_level = character_display_master.children[3] as TextNode;
+  var level_fill = master_level.getRangeFills(0, 4) as Paint[]
+  var value_fill = master_level.getRangeFills(5, master_level.characters.length) as Paint[]
+  var level_size = master_level.getRangeFontSize(0, 4) as number;
+  var value_size = master_level.getRangeFontSize(5, master_level.characters.length) as number;
+  
   var text_all = instance.children[3] as TextNode;
-  var level_fill = text_all.getRangeFills(0, 4) as Paint[]
-  var value_fill = text_all.getRangeFills(5, text_all.characters.length) as Paint[]
-  var level_size = text_all.getRangeFontSize(0, 4) as number;
-  var value_size = text_all.getRangeFontSize(5, text_all.characters.length) as number;
   text_all.characters = "Lvl. " + level;
-  text_all.setRangeFills(0, 4, level_fill);
+  text_all.setRangeFills(0, 5, level_fill);
   text_all.setRangeFills(5, text_all.characters.length, value_fill);
-  text_all.setRangeFontSize(0, 4, level_size);
+  text_all.setRangeFontSize(0, 5, level_size);
   text_all.setRangeFontSize(5, text_all.characters.length, value_size);
 };
 

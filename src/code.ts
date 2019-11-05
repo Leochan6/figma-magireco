@@ -104,7 +104,7 @@ figma.ui.onmessage = msg => {
   // get the attribute and avaliable ranks for the name
   else if (msg.type === 'name-change') {
     var result = getAttributeRanks(msg.name);
-    figma.ui.postMessage({type: 'update-attribute-rank', rank: result.ranks, attribute: result.attribute, tab:msg.tab });
+    figma.ui.postMessage({type: 'update-attribute-rank', rank: result.ranks, attribute: result.attribute, tab:msg.tab, copied:msg.copied });
   }
 
   else if (msg.type === 'sort-displays') {
