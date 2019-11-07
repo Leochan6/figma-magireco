@@ -22,6 +22,7 @@ This plugin is for creating a grid view of your Magical Girls in the game [Magia
 3. Update an existing Character Display if a mistake was made or as you progress though the game.
 4. Copy the properties of an existing Character Display to create a new or update an existing one.
 5. Automatic placement of newly create Character Displays with respect to the selected Character Display or parent Frame.
+6. Convert copied Character Display frames from one file to another file to work with the new file.
 
 ## Usage
 
@@ -32,15 +33,21 @@ This plugin is for creating a grid view of your Magical Girls in the game [Magia
 
 ### Update an Existing Character Display
 1. Select an existing instance of a Character Display.
-2. Press the `Copy Selected` and all properties appear in fields.
+2. Press the `Copy` and all properties appear in fields.
 3. Modify the fields you want to update.
-3. Press `Update Selected`. 
+3. Press `Update`. 
 
 ### Create new Character Display with Existing Properties
 1. Select an existing instance of a Character Display.
-2. Press the `Copy Selected` and all properties appear in fields.
+2. Press the `Copy` and all properties appear in fields.
 3. Modify any fields if desired.
 4. Press `Create`.
+
+### Convert Copied Character Displays from Another File
+1. Copy and paste either a Character Display instance(s) or an entire frame containing all the instances to convert from one file to another. Once pasted, all the instances will become frames as they are no longer attached to their master components. All the names of all the layers must match the original components.
+2. Select the Character Display frame(s) or parent frame (where all the children are Character Display frames) you want to convert.
+3. Press `Convert` and a toast message will show how many were converted or skipped.
+4. All the frames that were copy and pasted over are now converted to instances for which their master components are in the current document. 
 
 ## Gallery
 Home Screen:

@@ -80,72 +80,6 @@ function getDisplayProperties (selection: InstanceNode) {
   return display_properties;
 }
 
-function selectionSame(x, y) {
-  var selectionAreSame = true;
-  if (x.length != y.length) return false;
-  try {
-    for (var index in x) {
-      for(var propertyName in x[index]) {
-        if(x[index][propertyName] !== y[index][propertyName]) {
-          selectionAreSame = false;
-          break;
-        }
-      }
-    }
-  }
-  catch(err) {
-    selectionAreSame = false;
-  }  
-  return selectionAreSame;
-}
-
-
-// Checks if the two input are equal.
-function selectionEquals (x, y) {
-
-  // if both x and y are null or undefined and exactly the same
-  if (x === y) return true;
-
-  // if they are not strictly equal, they both need to be Objects
-  if (!(x instanceof Object) || !(y instanceof Object)) return false;
-
-  // they must have the exact same prototype chain, the closest we can do is
-  // test there constructor.
-  if (x.constructor !== y.constructor) return false;
-
-  if (x.hasOwnProperty("length") && x.hasOwnProperty("length") && x.length != y.length) {
-    return false;
-  }
-    // they both have the length property but not the same.
-
-  for (var p in x) {
-    // other properties were tested using x.constructor === y.constructor
-    if (!x.hasOwnProperty(p)) continue;
-
-    // allows to compare x[ p ] and y[ p ] when set to undefined
-    if (!y.hasOwnProperty(p)) {
-      return false;
-    }
-
-    // if they have the same strict value or identity then they are equal
-    if (x[p] === y[p]) continue;
-
-    // Numbers, Strings, Functions, Booleans must be strictly equal
-    if (typeof(x[p]) !== "object") return false;
-
-    // Objects and Arrays must be tested recursively
-    if (!selectionEquals(x[p],  y[p])) return false;
-  }
-
-  for (p in y) {
-    // allows x[ p ] to be set to undefined
-    if (y.hasOwnProperty(p) && ! x.hasOwnProperty(p)) return false;
-  }
-  return true;
-}
-
-
-
 /**
  * https://bytemaster.io/javascript-object-multi-property-sort
  * Function to be passed into array.sort() with a array storing the prop, direction, and isString.
@@ -169,4 +103,4 @@ function sortArrayBy(a, b, sortBy) {
   return result;
 }
 
-export {getNames, getAttributeRanks, getCharacterId, getDisplayProperties, selectionSame, selectionEquals, sortArrayBy};
+export {getNames, getAttributeRanks, getCharacterId, getDisplayProperties, sortArrayBy};

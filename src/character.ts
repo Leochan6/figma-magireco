@@ -247,4 +247,59 @@ function parametersValid (msg) {
 }
 
 
-export {createDisplay, updateDisplay, setCharacter, setLevel, setMagic, setMagia, setLocation, parametersValid};
+// Check if the objects in the frame are the right type and names match.
+function isCharacterDisplay(selection: FrameNode) {
+  if (selection.type != "FRAME" || selection.name.split("/")[0] != "Character Display") return false;
+  if (selection.children[0].type != "FRAME" || selection.children[0].name.split("/")[0] != "Magia") return false;
+  if (selection.children[1].type != "FRAME" || selection.children[1].name.split("/")[0] != "Magic") return false;
+  if (selection.children[2].type != "FRAME" || selection.children[2].name != "Character Base") return false;
+  if (selection.children[3].type != "TEXT" || selection.children[3].name != "Level") return false;
+  if (!RegExp('^Card\/(.+?)\/Rank [1-5]$').test(((selection.children[2] as FrameNode).children[0] as FrameNode).children[2].name)) return false;
+  if (!RegExp('^Attribute\/[A-z]+$').test((selection.children[2] as FrameNode).children[2].name)) return false;
+  if (!RegExp('^Star\/Rank [1-5]$').test((selection.children[2] as FrameNode).children[3].name)) return false;
+  if (!RegExp('^Lvl. [0-9]+$').test((selection.children[3] as TextNode).characters)) return false;
+  if (!RegExp('^Magic\/Level [0-3]$').test(selection.children[1].name)) return false;
+  if (!RegExp('^Magia\/Level [1-5]-[1-5]$').test(selection.children[0].name)) return false;
+  return true;
+}
+
+// convert each frame in the selection to an instance of Character Display.
+function convertToCharacterDisplay(selections: readonly FrameNode[]) {
+  var currentSelections = selections;
+  if (selections.length == 1 && selections[0].children.every(isCharacterDisplay)) {
+    currentSelections = selections[0].children as readonly FrameNode[];
+  }
+  var results = []
+  currentSelections.forEach(function (selection) {
+    var properties = {};
+    properties["name"] = ((selection.children[2] as FrameNode).children[0] as FrameNode).children[2].name.split("/")[1];
+    properties["attribute"] = (selection.children[2] as FrameNode).children[2].name.split("/")[1];
+    properties["rank"] = (selection.children[2] as FrameNode).children[3].name.split("/")[1].split(" ")[1];
+    properties["level"] = (selection.children[3] as TextNode).characters.split(" ")[1];
+    properties["magic"] = selection.children[1].name.split("/")[1].split(" ")[1];
+    properties["magia"] = selection.children[0].name.split("/")[1].split(" ")[1].split("-")[0];
+    properties["episode"] = selection.children[0].name.split("/")[1].split(" ")[1].split("-")[1];
+    properties["full_name"] = selection.name.includes("Rank") || selection.name.includes("Level") || selection.name.includes("Magic") || selection.name.includes("Magia") || selection.name.includes("Episode");
+    var instance = createDisplay(properties);
+    if (instance !== null) {
+      results.push({created: true, name: selection.name, properties:properties});
+      selection.parent.insertChild(selection.parent.children.indexOf(selection), instance);
+      instance.x = selection.x
+      instance.y = selection.y
+      selection.remove();
+    } else {
+      results.push({created: false, name: selection.name, properties:properties});
+    }
+  });
+  var created = 0, skipped = 0;
+  var message = "";
+  results.forEach(function(result) {
+    if (result["created"]) created++;
+    else skipped++;
+  });
+  message = "converted " + created + ", skipped " + skipped;
+  figma.notify(message, {timeout: 10000})
+}
+
+
+export {createDisplay, updateDisplay, setCharacter, setLevel, setMagic, setMagia, setLocation, parametersValid, isCharacterDisplay, convertToCharacterDisplay};

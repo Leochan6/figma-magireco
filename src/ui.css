@@ -44,6 +44,9 @@ input[type=number]::-webkit-outer-spin-button {
     opacity: 1;
 }
 
+td {
+  font-family: Arial;
+}
 table.tableList {
   border-collapse: collapse;
 }
