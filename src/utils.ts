@@ -77,7 +77,23 @@ function getDisplayProperties (selection: InstanceNode) {
 
   display_properties["id"] = JSON.parse(card_instance.masterComponent.description)["id"];
 
+  display_properties["nodeId"] = selection.id;
+
   return display_properties;
+}
+
+function printFrameDisplays(selection: SceneNode) {
+  if (selection.type == "FRAME") selection = selection as FrameNode;
+  else return;
+  selection.children.forEach(function (child: SceneNode) {
+    if (child.type == "INSTANCE") child = child as InstanceNode;
+    else return;
+    if (child.masterComponent.name == "Character Display") {
+      var display_properties = getDisplayProperties(child);
+      console.log(display_properties);
+    }
+  });
+  
 }
 
 /**
@@ -93,7 +109,7 @@ function getDisplayProperties (selection: InstanceNode) {
  *   isString: true
  * }];
  */ 
-function sortArrayBy(a, b, sortBy) {
+function sortArrayBy(a: any, b: any, sortBy: any[]) {
   let i = 0, result = 0;
     while (i < sortBy.length && result === 0) {
       if (sortBy[i].isString) result = sortBy[i].direction*(a[sortBy[i].prop].toString() < b[sortBy[i].prop].toString() ? -1 : (a[sortBy[i].prop].toString() > b[sortBy[i].prop].toString() ? 1 : 0));
@@ -103,4 +119,4 @@ function sortArrayBy(a, b, sortBy) {
   return result;
 }
 
-export {getNames, getAttributeRanks, getCharacterId, getDisplayProperties, sortArrayBy};
+export {getNames, getAttributeRanks, getCharacterId, getDisplayProperties, printFrameDisplays, sortArrayBy};

@@ -1,6 +1,8 @@
+import {getNames, getAttributeRanks, getCharacterId, getDisplayProperties, printFrameDisplays, sortArrayBy} from "./utils";
+
 
 // Create a new Character Display and returns the instance.
-function createDisplay (parameters) {
+function createDisplay (parameters: any) {
   var valid = parametersValid(parameters);
   var instance = null;
   if (valid.all_valid) {
@@ -21,7 +23,7 @@ function createDisplay (parameters) {
 }
 
 // Updates the selected Character Display with the new parameters
-function updateDisplay (instance: InstanceNode, parameters) {
+function updateDisplay (instance: InstanceNode, parameters: any) {
   var valid = parametersValid(parameters);
   if (valid.all_valid) {
     instance.name = "Character Display/" + parameters.name;
@@ -182,7 +184,7 @@ function setMagia (instance: InstanceNode, magia: string, episode: string) {
 
 
 // check if the parameters in msg are valid.
-function parametersValid (msg) {
+function parametersValid (msg: any) {
   var character_image = figma.getNodeById("1:142") as FrameNode;
   var result = {all_valid:false,name_valid:false,attribute_valid:false,rank_valid:false,level_valid:false, magic_valid:false, magia_valid:false, episode_valid:false, component_id:"", message:""};
   var level = parseInt(msg.level, 10);
@@ -301,5 +303,103 @@ function convertToCharacterDisplay(selections: readonly FrameNode[]) {
   figma.notify(message, {timeout: 10000})
 }
 
+function sortDisplays(group_by: string, sort_by: string, sort_dir: number, sort_id_dir: number, num_per_row: number) {
+  
+  // get the display properties of all the children in the frame.
+  var display_properties = [];
+  (figma.currentPage.selection[0] as FrameNode).children.forEach(function (child: InstanceNode) {
+    display_properties.push(getDisplayProperties(child));
+  });
 
-export {createDisplay, updateDisplay, setCharacter, setLevel, setMagic, setMagia, setLocation, parametersValid, isCharacterDisplay, convertToCharacterDisplay};
+  // add each display_property to the corresponding group.
+  var display_groups = group_properties(display_properties, group_by);
+  
+  // sort each group by the specified property.
+  var sortBy = [
+    { prop: sort_by, direction: sort_dir, isString: false },
+    { prop: "id", direction: sort_id_dir, isString: false }];
+
+  for (var group in display_groups) {
+    display_groups[group] = display_groups[group].sort((a: any, b: any) => sortArrayBy(a,b,sortBy));
+  }
+
+  placeCharacterDisplays(display_groups, num_per_row);
+}
+
+// adds each display_property to the corresponding group.
+function group_properties (display_properties: any[], group_by: string) {
+  var display_groups = {};
+  if (group_by == "attribute") {
+    display_groups = {"Fire": [], "Water": [], "Forest": [], "Light": [], "Dark": [], "Void": []};
+    display_properties.forEach(function(properties) {
+      display_groups[properties["attribute"]].push(properties);
+    });
+  } else if (group_by == "rank") {
+    display_groups = {"5": [], "4": [], "3": [], "2": [], "1": []};
+    display_properties.forEach(function(properties) {
+      display_groups[properties["rank"]].push(properties);
+    });
+  } else if (group_by == "magic") {
+    display_groups = {"3": [], "2": [], "1": [], "0": []};
+    display_properties.forEach(function(properties) {
+      display_groups[properties["magic"]].push(properties);
+    });
+  } else if (group_by == "magia") {
+    display_groups = {"5": [], "4": [], "3": [], "2": [], "1": []};
+    display_properties.forEach(function(properties) {
+      display_groups[properties["magia"]].push(properties);
+    });
+  } else if (group_by == "episode") {
+    display_groups = {"5": [], "4": [], "3": [], "2": [], "1": []};
+    display_properties.forEach(function(properties) {
+      display_groups[properties["episode"]].push(properties);
+    });
+  } else if (group_by == "none") {
+    display_groups = {"none": []};
+    display_properties.forEach(function(properties) {
+      display_groups["none"].push(properties);
+    });
+  }
+  return display_groups;
+}
+
+function placeCharacterDisplays(display_groups: any, num_per_row: number) {
+  var character_display_component = figma.getNodeById("3:908") as ComponentNode;
+  var width = character_display_component.width;
+  var height = character_display_component.height;
+  var frame = figma.currentPage.selection[0] as FrameNode;
+
+  var rows = 0;
+  for (var group in display_groups) {
+    rows += Math.ceil(display_groups[group].length/num_per_row);
+  }
+  
+  // set the frame size to fit the groups.
+  frame.resize(num_per_row * width, rows * height);
+
+  // loop though each display and set position
+  var curr_x = 0;
+  var curr_y = 0;
+  var index = frame.children.length-1;
+  for (var group in display_groups) {
+    if (display_groups[group].length == 0) continue;
+    display_groups[group].forEach((element: any) => {
+      var instance = figma.getNodeById(element["nodeId"]) as InstanceNode;
+      // go to next line of out of frame.
+      if (curr_x >= num_per_row * width) {
+        curr_x = 0;
+        curr_y += height;
+      }
+      instance.x = curr_x;
+      instance.y = curr_y;
+      curr_x += width;
+      // set the layer location.
+      frame.insertChild(index, instance);
+      index--;
+    });
+    curr_x = 0;
+    curr_y += height;
+  }
+}
+
+export {createDisplay, updateDisplay, setCharacter, setLevel, setMagic, setMagia, setLocation, parametersValid, isCharacterDisplay, convertToCharacterDisplay, sortDisplays};

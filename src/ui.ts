@@ -28,6 +28,19 @@ const ui = {
         copy_button:        document.getElementById('copy') as HTMLButtonElement,
       },
     },
+    sorting_tab:               document.getElementById('sorting_tab') as HTMLDivElement,
+    sorting: {
+      fields: {
+        group_select:        document.getElementById('group_by') as HTMLSelectElement,
+        sort_select:         document.getElementById('sort_by') as HTMLSelectElement,
+        sort_dir_select:     document.getElementById('sort_dir') as HTMLSelectElement,
+        sort_id_dir_select:  document.getElementById('sort_id_dir') as HTMLSelectElement,
+        row_field:           document.getElementById('displays_per_row') as HTMLInputElement,
+      },
+      buttons: {
+        sort_button:      document.getElementById('sort') as HTMLButtonElement,
+      },
+    },
     settings_tab:           document.getElementById('settings_tab') as HTMLDivElement,
     settings: {
       keep_open_checkbox:   document.getElementById('keep_open') as HTMLInputElement,
@@ -48,6 +61,11 @@ ui.tabs.home.fields.name_select.onchange = () => {
 // Open the Home Tab.
 document.getElementById('home_btn').onclick = () => {
   openTab(event,'home_tab');
+}
+
+// Open the Sorting Tab.
+document.getElementById('sorting_btn').onclick = () => {
+  openTab(event,'sorting_tab');
 }
 
 // Open the Settings Tab.
@@ -123,6 +141,16 @@ document.getElementById('update').onclick = () => {
 // Convert the selected frames into instances.
 document.getElementById('convert').onclick = () => {
   parent.postMessage({ pluginMessage: { type: 'convert-selection' } }, '*')
+}
+
+// Group and sort the current selection.
+document.getElementById('sort').onclick = () => {
+  const group_by = ui.tabs.sorting.fields.group_select.value.toLowerCase();
+  const sort_by = ui.tabs.sorting.fields.sort_select.value.toLowerCase();
+  const sort_dir = ui.tabs.sorting.fields.sort_dir_select.value == "Ascending" ? 1 : -1;
+  const sort_id_dir = ui.tabs.sorting.fields.sort_id_dir_select.value == "Ascending" ? 1 : -1;
+  const num_per_row = parseInt(ui.tabs.sorting.fields.row_field.value);
+  parent.postMessage({ pluginMessage: { type: 'sort-displays', group_by: group_by, sort_by: sort_by, sort_dir: sort_dir, sort_id_dir: sort_id_dir, num_per_row: num_per_row} }, '*')
 }
 
 

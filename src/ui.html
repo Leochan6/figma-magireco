@@ -1,6 +1,7 @@
 <body style="margin:0px">
     <div id="tab_bar" class="tab-bar" style="background-color:#2c2c2c" align="left">
         <button id="home_btn" class="tablink button buttonBlue" >Home</button>
+        <button id="sorting_btn" class="tablink button buttonGray" >Sorting</button>
         <button id="settings_btn" class="tablink button buttonGray" >Settings</button>
     </div>
     <div id="tabs" style="margin:20px">
@@ -74,6 +75,58 @@
                 <button id="copy" class="button buttonDisabled" disabled>Copy</button>
                 <button id="cancel" class="button buttonGray" disabled style="display:none">Cancel</button>
                 <button id="convert" class="button buttonDisabled" disabled>Convert</button>
+            </div>
+        </div>
+        <div id="sorting_tab" class="tab" style="display:none">
+            <div id="sorting_fields" align="left">
+                <table id="sorting_table" width=100%>
+                    <tr>
+                        <td>Group By: 
+                        <td><select id="group_by">
+                                <option selected value="Attribute">Attribute</option>
+                                <option value="Rank">Rank</option>
+                                <option value="Magic">Magic</option>
+                                <option value="Magia">Magia</option>
+                                <option value="Episode">Episode</option>
+                                <option value="None">None</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Sort By: 
+                        <td><select id="sort_by">
+                                <option value="Rank">Rank</option>
+                                <option selected value="Level">Level</option>
+                                <option value="Magic">Magic</option>
+                                <option value="Magia">Magia</option>
+                                <option value="Episode">Episode</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Sort Direction: 
+                        <td><select id="sort_dir">
+                                <option value="Ascending">Ascending</option>
+                                <option selected value="Descending">Descending</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>ID Sort Direction: 
+                        <td><select id="sort_id_dir">
+                                <option value="Ascending">Ascending</option>
+                                <option selected value="Descending">Descending</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>    
+                        <td>Displays Per Row:</td> 
+                        <td><input id="displays_per_row" class="custom-input" type="number" value=8 maxlength="2" size=2 min=1 max=99 border="2px solid black"></td> 
+                    </tr>
+                </table>
+            </div>
+            <div id="sorting_buttons" align="left">
+                <button id="sort" class="button buttonDisabled" type="submit" disabled >Sort</button>
             </div>
         </div>
         <div id="settings_tab" class="tab" style="display:none">

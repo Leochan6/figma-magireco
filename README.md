@@ -21,7 +21,7 @@ This plugin is for creating a grid view of your Magical Girls in the game [Magia
 2. Available values for each field are automatically filled in and available for selection for easy creation.
 3. Update an existing Character Display if a mistake was made or as you progress though the game.
 4. Copy the properties of an existing Character Display to create a new or update an existing one.
-5. Automatic placement of newly create Character Displays with respect to the selected Character Display or parent Frame.
+5. Automatic placement of newly created Character Displays with respect to the selected Character Display or parent Frame.
 6. Convert copied Character Display frames from one file to another file to work with the new file.
 
 ## Usage
@@ -49,6 +49,12 @@ This plugin is for creating a grid view of your Magical Girls in the game [Magia
 3. Press `Convert` and a toast message will show how many were converted or skipped.
 4. All the frames that were copy and pasted over are now converted to instances for which their master components are in the current document. 
 
+### Grouping and Sorting List
+1. Navigate to the `Sorting` tab.
+2. Select a frame containing only Character Displays.
+3. Select the property to group by, the property to sort by, the sorting direction, the direction to sort the ID's (the second property to sort by), and the number of Character Displays per row.
+4. Press `Sort`.
+
 ## Gallery
 Home Screen:
 
@@ -57,6 +63,10 @@ Home Screen:
 Name Select:
 
 ![Name Select](https://raw.githubusercontent.com/Leochan6/figma-magireco/master/readme/SelectName.png)
+
+Sorting:
+
+![Settings](https://raw.githubusercontent.com/Leochan6/figma-magireco/master/readme/Sorting.png)
 
 Settings:
 
@@ -73,6 +83,14 @@ Sample List 2:
 Sample List 3:
 
 ![Sample List 3](https://raw.githubusercontent.com/Leochan6/figma-magireco/master/readme/SampleList3.png)
+
+Sample Sorted List 1:
+
+![Sample List 1](https://raw.githubusercontent.com/Leochan6/figma-magireco/master/readme/SampleSortedList1.png)
+
+Sample Sorted List 2:
+
+![Sample List 2](https://raw.githubusercontent.com/Leochan6/figma-magireco/master/readme/SampleSortedList2.png)
 
 
 ### Manual Installation Instructions
