@@ -23,6 +23,7 @@ This plugin is for creating a grid view of your Magical Girls in the game [Magia
 4. Copy the properties of an existing Character Display to create a new or update an existing one.
 5. Automatic placement of newly created Character Displays with respect to the selected Character Display or parent Frame.
 6. Convert copied Character Display frames from one file to another file to work with the new file.
+7. Group and Sort Character Displays in a frame based on selected properties.
 
 ## Usage
 
