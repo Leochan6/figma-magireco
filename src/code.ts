@@ -1,6 +1,8 @@
 import {getNames, getAttributeRanks, getCharacterId, getDisplayProperties, printFrameDisplays, sortArrayBy} from "./utils";
 import {createDisplay, setLocation, updateDisplay, isCharacterDisplay, convertToCharacterDisplay, sortDisplays} from "./character";
 
+const documentVersion = "Document Version: 4";
+
 // This shows the HTML page in "ui.html".
 figma.showUI(__html__);
 figma.ui.resize(400, 300);
@@ -78,10 +80,24 @@ figma.ui.onmessage = msg => {
   // startup to check if in expected file
   if (msg.type === 'startup') {
     if (figma.getNodeById("3:908") === null || figma.getNodeById("3:908").name != "Character Display") {
-      var message = "The current file is not 'Magia Record Character Grids'. Please duplicate and open the Figma Project as indicated in the plugin page before using this plugin.";
-      figma.closePlugin(message);
+      var message = "The current file is not 'Magia Record Character Grids'.";
+      figma.notify(message, {timeout: 5000});
+      message = "Please duplicate and open the Figma Project linked in the plugin page before using this plugin.";
+      figma.notify(message, {timeout: 5000});
+      figma.closePlugin();
     }
     else {
+      // check the version of the project file.
+      var documentVersionText = figma.getNodeById("474:5384");
+      if (documentVersionText == null || documentVersionText.type != "TEXT" || (documentVersionText as TextNode).characters != documentVersion) {
+        if (documentVersionText != null && documentVersionText.type == "TEXT") {
+          console.log("Expected: " + documentVersion + " Found: " + (documentVersionText as TextNode).characters);
+        }
+        message = "The current project is outdated and some plugin features may not work.";
+        figma.notify(message, {timeout: 5000});
+        message = "Please reduplicate the project.";
+        figma.notify(message, {timeout: 5000});
+      }
       figma.loadFontAsync({ family: "Roboto", style: "Regular" }).then(() => {
         // get the names and set the name select fields.
         var names = getNames();
