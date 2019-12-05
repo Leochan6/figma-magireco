@@ -2,6 +2,7 @@
     <div id="tab_bar" class="tab-bar" style="background-color:#2c2c2c" align="left">
         <button id="home_btn" class="tablink button buttonBlue" >Home</button>
         <button id="sorting_btn" class="tablink button buttonGray" >Sorting</button>
+        <button id="background_btn" class="tablink button buttonGray" >Background</button>
         <button id="settings_btn" class="tablink button buttonGray" >Settings</button>
     </div>
     <div id="tabs" style="margin:20px">
@@ -127,6 +128,29 @@
             </div>
             <div id="sorting_buttons" align="left">
                 <button id="sort" class="button buttonDisabled" type="submit" disabled >Sort</button>
+            </div>
+        </div>
+        <div id="background_tab" class="tab" style="display:none">
+            <div id="background_fields" align="left">
+                <table id="background_table" width=100%>
+                    <tr>
+                        <td>Background Type: 
+                        <td><select id="background_type">
+                            <option selected value="Home Screen">Home Screen</option>
+                            <option value="Web Backgrounds">Web Backgrounds</option>
+                            <option value="Story Backgrounds">Story Backgrounds</option>
+                        </select>
+                    </tr>
+                    <tr>
+                        </td>
+                        <td>Background Name: 
+                        <td><select id="background_name"></select></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="background_buttons" align="left">
+                <button id="update_background" class="button buttonDisabled" type="submit" disabled >Create/Update</button>
+                <button id="resize_background" class="button buttonDisabled" disabled >Resize</button>
             </div>
         </div>
         <div id="settings_tab" class="tab" style="display:none">

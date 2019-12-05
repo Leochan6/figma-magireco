@@ -41,6 +41,16 @@ const ui = {
         sort_button:      document.getElementById('sort') as HTMLButtonElement,
       },
     },
+    background_tab:               document.getElementById('background_tab') as HTMLDivElement,
+    background: {
+      fields: {
+        type_select:        document.getElementById('background_type') as HTMLSelectElement,
+        name_select:         document.getElementById('background_name') as HTMLSelectElement,
+      },
+      buttons: {
+        update_background_button:      document.getElementById('update_background') as HTMLButtonElement,
+      },
+    },
     settings_tab:           document.getElementById('settings_tab') as HTMLDivElement,
     settings: {
       keep_open_checkbox:   document.getElementById('keep_open') as HTMLInputElement,
@@ -66,6 +76,11 @@ document.getElementById('home_btn').onclick = () => {
 // Open the Sorting Tab.
 document.getElementById('sorting_btn').onclick = () => {
   openTab(event,'sorting_tab');
+}
+
+// Open the Background Tab.
+document.getElementById('background_btn').onclick = () => {
+  openTab(event,'background_tab');
 }
 
 // Open the Settings Tab.
@@ -96,6 +111,12 @@ document.getElementById('rank').onchange = () => {
   else if (rank == 5) {
     level_field.max = '100';
   }
+}
+
+// Update the Background names based on the background type selected.
+document.getElementById("background_type").onchange = () => {
+  const type = ui.tabs.background.fields.type_select.value;
+  parent.postMessage({ pluginMessage: { type: 'background-change', background_type:type } }, '*')
 }
 
 // Create a new Character Display.
@@ -153,6 +174,18 @@ document.getElementById('sort').onclick = () => {
   parent.postMessage({ pluginMessage: { type: 'sort-displays', group_by: group_by, sort_by: sort_by, sort_dir: sort_dir, sort_id_dir: sort_id_dir, num_per_row: num_per_row} }, '*')
 }
 
+// Convert the selected frames into instances.
+document.getElementById('update_background').onclick = () => {
+  const background_type = ui.tabs.background.fields.type_select.value;
+  const background_name = ui.tabs.background.fields.name_select.value;
+  parent.postMessage({ pluginMessage: { type: 'update-background', background_type: background_type, background_name: background_name } }, '*')
+}
+
+// Auto resize the current background.
+document.getElementById('resize_background').onclick = () => {
+  parent.postMessage({ pluginMessage: { type: 'resize-background' } }, '*')
+}
+
 
 onmessage = (event) => {
   
@@ -176,12 +209,26 @@ onmessage = (event) => {
 
   // Add names to the name_select field.
   else if (event.data.pluginMessage.type === 'update-names') {
-    var name_select = document.getElementById(event.data.pluginMessage.elementId) as HTMLSelectElement;
-    event.data.pluginMessage.names.forEach(function(name) {
+    var name_select = ui.tabs.home.fields.name_select
+    event.data.pluginMessage.names.forEach(function(name: string) {
       name_select.options.add(new Option(name, name, false));
     });
     name_select.value = "Iroha Tamaki";
     name_select.dispatchEvent(new Event('change'));
+  }
+
+  // Add Background names to the background_name select field.
+  else if (event.data.pluginMessage.type === 'update-background-names') {
+    var name_select = ui.tabs.background.fields.name_select
+    // remove existing options in select.
+    var num_options = name_select.options.length;
+    for (var i = num_options; i >= 0 ; i--) {
+      name_select.options.remove(i);
+    }
+    event.data.pluginMessage.background_names.forEach(function(name: string) {
+      name_select.options.add(new Option(name, name, false));
+    });
+    name_select.value = name_select.options[0].value;
   }
 
   // Set isplay_properties with the properties of the current selection.

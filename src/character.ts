@@ -1,4 +1,4 @@
-import {getNames, getAttributeRanks, getCharacterId, getDisplayProperties, printFrameDisplays, sortArrayBy} from "./utils";
+import {getNames, getAttributeRanks, getCharacterId, getDisplayProperties, isBackgroundInstance, updateBackground, setBackgroundSizeLocation, printFrameDisplays, sortArrayBy} from "./utils";
 
 
 // Create a new Character Display and returns the instance.
@@ -303,12 +303,18 @@ function convertToCharacterDisplay(selections: readonly FrameNode[]) {
   figma.notify(message, {timeout: 10000})
 }
 
+// check if the Scene Node is an Instance Node and is an instance of Character Display.
+function isCharacterDisplayInstance(node: SceneNode) {
+  if (node.type == "INSTANCE" && node.masterComponent.name == "Character Display") return true;
+  else return false;
+}
+
 function sortDisplays(group_by: string, sort_by: string, sort_dir: number, sort_id_dir: number, num_per_row: number) {
   
   // get the display properties of all the children in the frame.
   var display_properties = [];
   (figma.currentPage.selection[0] as FrameNode).children.forEach(function (child: InstanceNode) {
-    display_properties.push(getDisplayProperties(child));
+    if (isCharacterDisplayInstance(child)) display_properties.push(getDisplayProperties(child));
   });
 
   // add each display_property to the corresponding group.
@@ -402,4 +408,4 @@ function placeCharacterDisplays(display_groups: any, num_per_row: number) {
   }
 }
 
-export {createDisplay, updateDisplay, setCharacter, setLevel, setMagic, setMagia, setLocation, parametersValid, isCharacterDisplay, convertToCharacterDisplay, sortDisplays};
+export {createDisplay, updateDisplay, setCharacter, setLevel, setMagic, setMagia, setLocation, parametersValid, isCharacterDisplay, convertToCharacterDisplay, isCharacterDisplayInstance, sortDisplays};

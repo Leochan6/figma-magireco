@@ -1,5 +1,5 @@
-import {getNames, getAttributeRanks, getCharacterId, getDisplayProperties, printFrameDisplays, sortArrayBy} from "./utils";
-import {createDisplay, setLocation, updateDisplay, isCharacterDisplay, convertToCharacterDisplay, sortDisplays} from "./character";
+import {getNames, getAttributeRanks, getCharacterId, getDisplayProperties, getBackgroundNames, isBackgroundInstance, updateBackground, setBackgroundSizeLocation, printFrameDisplays, sortArrayBy} from "./utils";
+import {createDisplay, setLocation, updateDisplay, isCharacterDisplay, convertToCharacterDisplay, isCharacterDisplayInstance, sortDisplays} from "./character";
 
 const documentVersion = "Document Version: 4";
 
@@ -19,15 +19,17 @@ figma.on("selectionchange", () => {
     var selection = figma.currentPage.selection[0];
     if (selection.type == "INSTANCE") {
       // enable copy and update buttons
-      if (selection.masterComponent.name == "Character Display") {
+      if (isCharacterDisplayInstance(selection)) {
         var display_properties = getDisplayProperties(selection);
         // console.log(JSON.stringify(display_properties))
         figma.ui.postMessage({type: 'update-properties', display_properties:display_properties });
         figma.ui.postMessage({type: 'enable-element', name: "copy"});
         figma.ui.postMessage({type: 'enable-element', name: "update"});
-        figma.ui.postMessage({type: 'disable-element', name: "convert"});
-        figma.ui.postMessage({type: 'disable-element', name: "sort"});
-      }
+      } 
+      figma.ui.postMessage({type: 'disable-element', name: "convert"});
+      figma.ui.postMessage({type: 'disable-element', name: "sort"});
+      figma.ui.postMessage({type: 'disable-element', name: "update_background"});
+      figma.ui.postMessage({type: 'disable-element', name: "resize_background"});
     }
 
     // frame selected and is a single Character Display.
@@ -36,6 +38,8 @@ figma.on("selectionchange", () => {
       figma.ui.postMessage({type: 'disable-element', name: "copy"});
       figma.ui.postMessage({type: 'disable-element', name: "update"});
       figma.ui.postMessage({type: 'disable-element', name: "sort"});
+      figma.ui.postMessage({type: 'disable-element', name: "update_background"});
+      figma.ui.postMessage({type: 'disable-element', name: "resize_background"});
     }
 
     // frame selected and all children are frame and Character Displays.
@@ -44,13 +48,19 @@ figma.on("selectionchange", () => {
       figma.ui.postMessage({type: 'disable-element', name: "copy"});
       figma.ui.postMessage({type: 'disable-element', name: "update"});
       figma.ui.postMessage({type: 'disable-element', name: "sort"});
+      figma.ui.postMessage({type: 'disable-element', name: "update_background"});
+      figma.ui.postMessage({type: 'disable-element', name: "resize_background"});
     }
 
     // frame selected and all children are Character Displays instances.
     else if (selection.type == "FRAME" && 
       selection.children.every((child) => child.type == "INSTANCE") &&
-      selection.children.every((child: InstanceNode) => child.masterComponent.name == "Character Display")) {
+      selection.children.every((child) => isCharacterDisplayInstance(child) || isBackgroundInstance(child))) {
       figma.ui.postMessage({type: 'enable-element', name: "sort"});
+      figma.ui.postMessage({type: 'enable-element', name: "update_background"});
+      if (selection.children.some((child) => isBackgroundInstance(child))) {
+        figma.ui.postMessage({type: 'enable-element', name: "resize_background"});
+      }
     }
 
     else if (selection.type == "FRAME" || selection.type == "GROUP") {
@@ -59,10 +69,12 @@ figma.on("selectionchange", () => {
       figma.ui.postMessage({type: 'disable-element', name: "update"});
       figma.ui.postMessage({type: 'disable-element', name: "convert"});
       figma.ui.postMessage({type: 'disable-element', name: "sort"});
+      figma.ui.postMessage({type: 'disable-element', name: "update_background"});
+      figma.ui.postMessage({type: 'disable-element', name: "resize_background"});
     }
   }
 
-  // disable copy, update and sort buttons
+  // disable copy, update and sort buttons  
   else {
     if (figma.currentPage.selection.length > 1 && figma.currentPage.selection.every(isCharacterDisplay)) {
       figma.ui.postMessage({type: 'enable-element', name: "convert"});
@@ -71,6 +83,8 @@ figma.on("selectionchange", () => {
       figma.ui.postMessage({type: 'disable-element', name: "update"});
       figma.ui.postMessage({type: 'disable-element', name: "convert"});
       figma.ui.postMessage({type: 'disable-element', name: "sort"});
+      figma.ui.postMessage({type: 'disable-element', name: "update_background"});
+      figma.ui.postMessage({type: 'disable-element', name: "resize_background"});
     }
   }
 });
@@ -101,7 +115,9 @@ figma.ui.onmessage = msg => {
       figma.loadFontAsync({ family: "Roboto", style: "Regular" }).then(() => {
         // get the names and set the name select fields.
         var names = getNames();
-        figma.ui.postMessage({type: 'update-names', names:names, elementId:"name" });
+        figma.ui.postMessage({type: 'update-names', names:names });
+        var background_names = getBackgroundNames("Home Screen");
+        figma.ui.postMessage({type: 'update-background-names', background_names:background_names });
       });
     }
   }
@@ -137,6 +153,22 @@ figma.ui.onmessage = msg => {
     var sort_id_dir = msg.sort_id_dir;
     var num_per_row = msg.num_per_row;
     sortDisplays(group_by, sort_by, sort_dir, sort_id_dir, num_per_row);
+  }
+
+  else if (msg.type === 'background-change') {
+    var background_type = msg.background_type;
+    var background_names = getBackgroundNames(background_type);
+    figma.ui.postMessage({type: 'update-background-names', background_names:background_names });
+  }
+
+  else if (msg.type === 'update-background') {
+    var background_type = msg.background_type;
+    var background_name = msg.background_name;
+    updateBackground(background_type, background_name);
+  }
+
+  else if (msg.type === 'resize-background') {
+    setBackgroundSizeLocation();
   }
   
   // close the plugin.
