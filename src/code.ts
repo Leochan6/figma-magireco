@@ -1,90 +1,98 @@
-import {getNames, getAttributeRanks, getCharacterId, getDisplayProperties, getBackgroundNames, isBackgroundInstance, updateBackground, setBackgroundSizeLocation, printFrameDisplays, sortArrayBy} from "./utils";
-import {createDisplay, setLocation, updateDisplay, isCharacterDisplay, convertToCharacterDisplay, isCharacterDisplayInstance, sortDisplays} from "./character";
+import {getNames, getAttributeRanks, getDisplayProperties, ButtonOptionsModel} from "./utils";
+import {getBackgroundNames, isBackgroundInstance, updateBackground, setBackgroundSizeLocation, removeBackground } from "./background";
+import {createDisplay, setLocation, updateDisplay, convertToCharacterDisplay, isCharacterDisplay, isCharacterDisplayInstance, sortDisplays} from "./character";
+
 
 const documentVersion = "Document Version: 4";
 
-// This shows the HTML page in "ui.html".
+// show the HTML page in "ui.html" and resize.
 figma.showUI(__html__);
 figma.ui.resize(400, 300);
 
-// Calls to "parent.postMessage" from within the HTML page will trigger this
-// callback. The callback will be passed the "pluginMessage" property of the
-// posted message.
+// refresh the current selection.
+var currentSelection = figma.currentPage.selection;
+figma.currentPage.selection = [];
+  setTimeout(() => {
+    figma.currentPage.selection = currentSelection;
+  },700);
 
-
+// enable/disable buttons and update elements when the selection changes.
 figma.on("selectionchange", () => {
   console.log(figma.currentPage.selection);
 
   if (figma.currentPage.selection.length == 1) {
     var selection = figma.currentPage.selection[0];
+    // instance selected.
     if (selection.type == "INSTANCE") {
-      // enable copy and update buttons
+      // is a Character Display instances.
       if (isCharacterDisplayInstance(selection)) {
         var display_properties = getDisplayProperties(selection);
-        // console.log(JSON.stringify(display_properties))
         figma.ui.postMessage({type: 'update-properties', display_properties:display_properties });
-        figma.ui.postMessage({type: 'enable-element', name: "copy"});
-        figma.ui.postMessage({type: 'enable-element', name: "update"});
+        var buttonOptions = new ButtonOptionsModel({"copy":true, "update":true});
+        buttonOptions.enabledDisableButtons();
       } 
-      figma.ui.postMessage({type: 'disable-element', name: "convert"});
-      figma.ui.postMessage({type: 'disable-element', name: "sort"});
-      figma.ui.postMessage({type: 'disable-element', name: "update_background"});
-      figma.ui.postMessage({type: 'disable-element', name: "resize_background"});
-    }
 
-    // frame selected and is a single Character Display.
-    else if (selection.type == "FRAME" && isCharacterDisplay(selection)) {
-      figma.ui.postMessage({type: 'enable-element', name: "convert"});
-      figma.ui.postMessage({type: 'disable-element', name: "copy"});
-      figma.ui.postMessage({type: 'disable-element', name: "update"});
-      figma.ui.postMessage({type: 'disable-element', name: "sort"});
-      figma.ui.postMessage({type: 'disable-element', name: "update_background"});
-      figma.ui.postMessage({type: 'disable-element', name: "resize_background"});
+      // is a Background instance.
+      else if (isBackgroundInstance(selection)) {
+        var buttonOptions = new ButtonOptionsModel({"update_background":true, "resize_background":true, "remove_background":true});
+        buttonOptions.enabledDisableButtons();
+      }
     }
+    
+    // frame selected.
+    else if (selection.type == "FRAME") {
+      // is a single Character Display.
+      if (isCharacterDisplay(selection)) {        
+        var buttonOptions = new ButtonOptionsModel({"convert":true});
+        buttonOptions.enabledDisableButtons();
+      }
 
-    // frame selected and all children are frame and Character Displays.
-    else if (selection.type == "FRAME" && selection.children.every(isCharacterDisplay)) {
-      figma.ui.postMessage({type: 'enable-element', name: "convert"});
-      figma.ui.postMessage({type: 'disable-element', name: "copy"});
-      figma.ui.postMessage({type: 'disable-element', name: "update"});
-      figma.ui.postMessage({type: 'disable-element', name: "sort"});
-      figma.ui.postMessage({type: 'disable-element', name: "update_background"});
-      figma.ui.postMessage({type: 'disable-element', name: "resize_background"});
-    }
+      // all children are frame and Character Display frames.
+      else if (selection.children.every(isCharacterDisplay)) {
+        var buttonOptions = new ButtonOptionsModel({"convert":true});
+        buttonOptions.enabledDisableButtons();
+      }
 
-    // frame selected and all children are Character Displays instances.
-    else if (selection.type == "FRAME" && 
-      selection.children.every((child) => child.type == "INSTANCE") &&
-      selection.children.every((child) => isCharacterDisplayInstance(child) || isBackgroundInstance(child))) {
-      figma.ui.postMessage({type: 'enable-element', name: "sort"});
-      figma.ui.postMessage({type: 'enable-element', name: "update_background"});
-      if (selection.children.some((child) => isBackgroundInstance(child))) {
-        figma.ui.postMessage({type: 'enable-element', name: "resize_background"});
+      // all children are instances.
+      else if (selection.children.every((child) => child.type == "INSTANCE")) {
+        if (selection.children.every((child) => isCharacterDisplayInstance(child))) {
+          var buttonOptions = new ButtonOptionsModel({"sort":true, "update_background":true});
+          buttonOptions.enabledDisableButtons();
+        }
+        else if (selection.children.every((child) => isBackgroundInstance(child))) {
+          var buttonOptions = new ButtonOptionsModel({"update_background":true, "resize_background":true, "remove_background":true});
+          buttonOptions.enabledDisableButtons();
+        }
+        else if (selection.children.every((child) => isCharacterDisplayInstance(child) || isBackgroundInstance(child))) {
+          var buttonOptions = new ButtonOptionsModel({"sort":true, "update_background":true, "resize_background":true, "remove_background":true});
+          buttonOptions.enabledDisableButtons();
+        }
+      } 
+
+      // unexpected frame contents.
+      else {
+        var buttonOptions = new ButtonOptionsModel();
+        buttonOptions.enabledDisableButtons();
       }
     }
 
-    else if (selection.type == "FRAME" || selection.type == "GROUP") {
-      // disable copy, update, convert buttons.
-      figma.ui.postMessage({type: 'disable-element', name: "copy"});
-      figma.ui.postMessage({type: 'disable-element', name: "update"});
-      figma.ui.postMessage({type: 'disable-element', name: "convert"});
-      figma.ui.postMessage({type: 'disable-element', name: "sort"});
-      figma.ui.postMessage({type: 'disable-element', name: "update_background"});
-      figma.ui.postMessage({type: 'disable-element', name: "resize_background"});
+    // unexpected object selected.
+    else {
+      var buttonOptions = new ButtonOptionsModel();
+      buttonOptions.enabledDisableButtons();
     }
   }
 
-  // disable copy, update and sort buttons  
+  // selection length not equal 1.
   else {
+    // selection length greater than 1 and all are Character Display frames.
     if (figma.currentPage.selection.length > 1 && figma.currentPage.selection.every(isCharacterDisplay)) {
       figma.ui.postMessage({type: 'enable-element', name: "convert"});
-    } else {
-      figma.ui.postMessage({type: 'disable-element', name: "copy"});
-      figma.ui.postMessage({type: 'disable-element', name: "update"});
-      figma.ui.postMessage({type: 'disable-element', name: "convert"});
-      figma.ui.postMessage({type: 'disable-element', name: "sort"});
-      figma.ui.postMessage({type: 'disable-element', name: "update_background"});
-      figma.ui.postMessage({type: 'disable-element', name: "resize_background"});
+    } 
+    // anything else.
+    else {
+      var buttonOptions = new ButtonOptionsModel();
+      buttonOptions.enabledDisableButtons();
     }
   }
 });
@@ -143,32 +151,36 @@ figma.ui.onmessage = msg => {
   // get the attribute and avaliable ranks for the name
   else if (msg.type === 'name-change') {
     var result = getAttributeRanks(msg.name);
-    figma.ui.postMessage({type: 'update-attribute-rank', rank: result.ranks, attribute: result.attribute, tab:msg.tab, copied:msg.copied });
+    figma.ui.postMessage({type: 'update-attribute-rank', rank: result.ranks, attribute: result.attribute, copied:msg.copied });
   }
 
+  // sort the Character Displays in the selected frame.
   else if (msg.type === 'sort-displays') {
-    var group_by = msg.group_by;
-    var sort_by = msg.sort_by;
-    var sort_dir = msg.sort_dir;
-    var sort_id_dir = msg.sort_id_dir;
-    var num_per_row = msg.num_per_row;
-    sortDisplays(group_by, sort_by, sort_dir, sort_id_dir, num_per_row);
+    sortDisplays(msg.group_by, msg.sort_by, msg.sort_dir, msg.sort_id_dir, msg.num_per_row);
   }
 
+  // update the list of background names for the selected background type.
   else if (msg.type === 'background-change') {
     var background_type = msg.background_type;
     var background_names = getBackgroundNames(background_type);
     figma.ui.postMessage({type: 'update-background-names', background_names:background_names });
   }
 
+  // create or update the background of the selected frame.
   else if (msg.type === 'update-background') {
     var background_type = msg.background_type;
     var background_name = msg.background_name;
     updateBackground(background_type, background_name);
   }
 
+  // resize the background to fit the selected frame.
   else if (msg.type === 'resize-background') {
     setBackgroundSizeLocation();
+  }
+
+  // remove the background from the selected frame.
+  else if (msg.type === 'remove-background') {
+    removeBackground();
   }
   
   // close the plugin.

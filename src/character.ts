@@ -1,4 +1,4 @@
-import {getNames, getAttributeRanks, getCharacterId, getDisplayProperties, isBackgroundInstance, updateBackground, setBackgroundSizeLocation, printFrameDisplays, sortArrayBy} from "./utils";
+import {getDisplayProperties, sortArrayBy} from "./utils";
 
 
 // Create a new Character Display and returns the instance.

@@ -49,6 +49,8 @@ const ui = {
       },
       buttons: {
         update_background_button:      document.getElementById('update_background') as HTMLButtonElement,
+        resize_background_button:      document.getElementById('resize_background') as HTMLButtonElement,
+        remove_background_button:      document.getElementById('remove_background') as HTMLButtonElement,
       },
     },
     settings_tab:           document.getElementById('settings_tab') as HTMLDivElement,
@@ -184,6 +186,11 @@ document.getElementById('update_background').onclick = () => {
 // Auto resize the current background.
 document.getElementById('resize_background').onclick = () => {
   parent.postMessage({ pluginMessage: { type: 'resize-background' } }, '*')
+}
+
+// removes the current background.
+document.getElementById('remove_background').onclick = () => {
+  parent.postMessage({ pluginMessage: { type: 'remove-background' } }, '*')
 }
 
 
