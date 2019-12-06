@@ -24,6 +24,7 @@ This plugin is for creating a grid view of your Magical Girls in the game [Magia
 5. Automatic placement of newly created Character Displays with respect to the selected Character Display or parent Frame.
 6. Convert copied Character Display frames from one file to another file to work with the new file.
 7. Group and Sort Character Displays in a frame based on selected properties.
+8. Set Backgrounds for the frames containing Character Displays.
 
 ## Usage
 
@@ -55,6 +56,22 @@ This plugin is for creating a grid view of your Magical Girls in the game [Magia
 2. Select a frame containing only Character Displays.
 3. Select the property to group by, the property to sort by, the sorting direction, the direction to sort the ID's (the second property to sort by), and the number of Character Displays per row.
 4. Press `Sort`.
+
+### Adding Background to List
+1. Navigate to the `Background Tab`.
+2. Select the frame you want to add a background to.
+3. Select the Background Type and Background Name you want to add to the frame. You can see the available backgrounds in the `Background Page`.
+4. Press `Create/Update`.
+
+### Resizing Existing Background
+1. Navigate to the `Background Tab`.
+2. Select the frame you want to add a background to.
+3. Press `Resize`. You would want to do this if the frame has been resized and the background no longer fits or is no longer centered.
+
+### Removing a Background.
+1. Navigate to the `Background Tab`.
+2. Select the frame you want to add a background to.
+3. Press `Remove`.
 
 ## Gallery
 Home Screen:
@@ -92,6 +109,14 @@ Sample Sorted List 1:
 Sample Sorted List 2:
 
 ![Sample List 2](https://raw.githubusercontent.com/Leochan6/figma-magireco/master/readme/SampleSortedList2.png)
+
+Sample Sorted List with Background 1:
+
+![Sample List 1](https://raw.githubusercontent.com/Leochan6/figma-magireco/master/readme/SampleSortedListBackground1.png)
+
+Sample Sorted List with Background 2:
+
+![Sample List 2](https://raw.githubusercontent.com/Leochan6/figma-magireco/master/readme/SampleSortedListBackground2.png)
 
 
 ### Manual Installation Instructions
