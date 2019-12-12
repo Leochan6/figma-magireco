@@ -113,23 +113,23 @@ function setCharacter (instance: InstanceNode, attribute: string, rank: string, 
     background_instance.masterComponent = figma.getNodeById("1:118") as ComponentNode;
   }
 
-  if (rank == "1") {
+  if (rank == "One") {
     frame_intance.masterComponent = figma.getNodeById("1:97") as ComponentNode;
     star_instance.masterComponent = figma.getNodeById("1:124") as ComponentNode;
   }
-  else if (rank == "2") {
+  else if (rank == "Two") {
     frame_intance.masterComponent = figma.getNodeById("1:98") as ComponentNode;
     star_instance.masterComponent = figma.getNodeById("1:125") as ComponentNode;
   }
-  else if (rank == "3") {
+  else if (rank == "Three") {
     frame_intance.masterComponent = figma.getNodeById("1:99") as ComponentNode;
     star_instance.masterComponent = figma.getNodeById("1:126") as ComponentNode;
   }
-  else if (rank == "4") {
+  else if (rank == "Four") {
     frame_intance.masterComponent = figma.getNodeById("1:100") as ComponentNode;
     star_instance.masterComponent = figma.getNodeById("1:127") as ComponentNode;
   }
-  else if (rank == "5") {
+  else if (rank == "Five") {
     frame_intance.masterComponent = figma.getNodeById("1:101") as ComponentNode;
     star_instance.masterComponent = figma.getNodeById("1:128") as ComponentNode;
   }
@@ -156,30 +156,30 @@ function setLevel (instance: InstanceNode, level: string) {
 // sets the magic level.
 function setMagic (instance: InstanceNode, magic: string) {
   var magic_instance = instance.children[1] as InstanceNode;
-  if      (magic == "0")   magic_instance.masterComponent = figma.getNodeById("3:896") as ComponentNode;
-  else if (magic == "1")   magic_instance.masterComponent = figma.getNodeById("3:13") as ComponentNode;
-  else if (magic == "2")   magic_instance.masterComponent = figma.getNodeById("7:470") as ComponentNode;
-  else if (magic == "3")   magic_instance.masterComponent = figma.getNodeById("7:477") as ComponentNode;
+  if      (magic == "Zero")   magic_instance.masterComponent = figma.getNodeById("3:896") as ComponentNode;
+  else if (magic == "One")   magic_instance.masterComponent = figma.getNodeById("3:13") as ComponentNode;
+  else if (magic == "Two")   magic_instance.masterComponent = figma.getNodeById("7:470") as ComponentNode;
+  else if (magic == "Three")   magic_instance.masterComponent = figma.getNodeById("7:477") as ComponentNode;
 };
 
 // sets the magia and episode level.
 function setMagia (instance: InstanceNode, magia: string, episode: string) {
   var magia_instance = instance.children[0] as InstanceNode;
-  if      (magia == "1" && episode == "1")   magia_instance.masterComponent = figma.getNodeById("10:1993") as ComponentNode;
-  else if (magia == "1" && episode == "2")   magia_instance.masterComponent = figma.getNodeById("10:1960") as ComponentNode;
-  else if (magia == "1" && episode == "3")   magia_instance.masterComponent = figma.getNodeById("10:1911") as ComponentNode;
-  else if (magia == "1" && episode == "4")   magia_instance.masterComponent = figma.getNodeById("10:1846") as ComponentNode;
-  else if (magia == "1" && episode == "5")   magia_instance.masterComponent = figma.getNodeById("3:41") as ComponentNode;
-  else if (magia == "2" && episode == "2")   magia_instance.masterComponent = figma.getNodeById("10:1961") as ComponentNode;
-  else if (magia == "2" && episode == "3")   magia_instance.masterComponent = figma.getNodeById("10:1912") as ComponentNode;
-  else if (magia == "2" && episode == "4")   magia_instance.masterComponent = figma.getNodeById("10:1847") as ComponentNode;
-  else if (magia == "2" && episode == "5")   magia_instance.masterComponent = figma.getNodeById("7:496") as ComponentNode;
-  else if (magia == "3" && episode == "3")   magia_instance.masterComponent = figma.getNodeById("10:1913") as ComponentNode;
-  else if (magia == "3" && episode == "4")   magia_instance.masterComponent = figma.getNodeById("10:1848") as ComponentNode;
-  else if (magia == "3" && episode == "5")   magia_instance.masterComponent = figma.getNodeById("7:507") as ComponentNode;
-  else if (magia == "4" && episode == "4")   magia_instance.masterComponent = figma.getNodeById("10:1849") as ComponentNode;
-  else if (magia == "4" && episode == "5")   magia_instance.masterComponent = figma.getNodeById("7:514") as ComponentNode;
-  else if (magia == "5" && episode == "5")   magia_instance.masterComponent = figma.getNodeById("7:521") as ComponentNode;
+  if      (magia == "One" && episode == "One")   magia_instance.masterComponent = figma.getNodeById("10:1993") as ComponentNode;
+  else if (magia == "One" && episode == "Two")   magia_instance.masterComponent = figma.getNodeById("10:1960") as ComponentNode;
+  else if (magia == "One" && episode == "Three")   magia_instance.masterComponent = figma.getNodeById("10:1911") as ComponentNode;
+  else if (magia == "One" && episode == "Four")   magia_instance.masterComponent = figma.getNodeById("10:1846") as ComponentNode;
+  else if (magia == "One" && episode == "Five")   magia_instance.masterComponent = figma.getNodeById("3:41") as ComponentNode;
+  else if (magia == "Two" && episode == "Two")   magia_instance.masterComponent = figma.getNodeById("10:1961") as ComponentNode;
+  else if (magia == "Two" && episode == "Three")   magia_instance.masterComponent = figma.getNodeById("10:1912") as ComponentNode;
+  else if (magia == "Two" && episode == "Four")   magia_instance.masterComponent = figma.getNodeById("10:1847") as ComponentNode;
+  else if (magia == "Two" && episode == "Five")   magia_instance.masterComponent = figma.getNodeById("7:496") as ComponentNode;
+  else if (magia == "Three" && episode == "Three")   magia_instance.masterComponent = figma.getNodeById("10:1913") as ComponentNode;
+  else if (magia == "Three" && episode == "Four")   magia_instance.masterComponent = figma.getNodeById("10:1848") as ComponentNode;
+  else if (magia == "Three" && episode == "Five")   magia_instance.masterComponent = figma.getNodeById("7:507") as ComponentNode;
+  else if (magia == "Four" && episode == "Four")   magia_instance.masterComponent = figma.getNodeById("10:1849") as ComponentNode;
+  else if (magia == "Four" && episode == "Five")   magia_instance.masterComponent = figma.getNodeById("7:514") as ComponentNode;
+  else if (magia == "Five" && episode == "Five")   magia_instance.masterComponent = figma.getNodeById("7:521") as ComponentNode;
 };
 
 
@@ -211,23 +211,23 @@ function parametersValid (msg: any) {
       result.name_valid = true;
       if (child.name.includes("/Rank " + msg.rank)) {
         result.rank_valid = true;
-        if (msg.rank == "1") {
+        if (msg.rank == "One") {
           if (level >= 1 && level <= 40) result.level_valid = true;
           else result.message += "Experience Level must be between 1 and 40 for rank 1.\n";
         }
-        else if (msg.rank == "2") {
+        else if (msg.rank == "Two") {
           if (level >= 1 && level <= 50) result.level_valid = true;
           else result.message += "Experience Level must be between 1 and 50 for rank 2.\n";
         }
-        else if (msg.rank == "3") {
+        else if (msg.rank == "Three") {
           if (level >= 1 && level <= 60) result.level_valid = true;
           else result.message += "Experience Level must be between 1 and 60 for rank 3.\n";
         }
-        else if (msg.rank == "4") {
+        else if (msg.rank == "Four") {
           if (level >= 1 && level <= 80) result.level_valid = true;
           else result.message += "Experience Level must be between 1 and 80 for rank 4.\n";
         }
-        else if (msg.rank == "5") {
+        else if (msg.rank == "Five") {
           if (level >= 1 && level <= 100) result.level_valid = true;
           else result.message += "Experience Level must be between 1 and 100 for rank 5.\n";
         }
@@ -309,7 +309,9 @@ function isCharacterDisplayInstance(node: SceneNode) {
   else return false;
 }
 
-function sortDisplays(group_by: string, sort_by: string, sort_dir: number, sort_id_dir: number, num_per_row: number) {
+const ATTRIBUTE_ORDER = {"Fire": 0, "Water": 1, "Forest": 2, "Light": 3, "Dark": 4, "Void": 5};
+
+function sortDisplays(group_by: string, group_dir: number, sort_by_1: string, sort_dir_1: number, sort_by_2: string, sort_dir_2: number, sort_id_dir: number, num_per_row: number) {
   
   // get the display properties of all the children in the frame.
   var display_properties = [];
@@ -318,12 +320,26 @@ function sortDisplays(group_by: string, sort_by: string, sort_dir: number, sort_
   });
 
   // add each display_property to the corresponding group.
-  var display_groups = group_properties(display_properties, group_by);
+  var display_groups = group_properties(display_properties, group_by, group_dir);
+
+  // convert attributes to numbers.
+  for (var group_name in display_groups) {
+    var group = display_groups[group_name];
+    group.forEach(function(properties: any) {
+      var attribute = properties["attribute"];
+      properties["attribute"] = ATTRIBUTE_ORDER[attribute];
+    })
+  }
   
   // sort each group by the specified property.
-  var sortBy = [
-    { prop: sort_by, direction: sort_dir, isString: false },
-    { prop: "id", direction: sort_id_dir, isString: false }];
+  var sortBy = [];
+  if (sort_by_1 != "none") {
+    sortBy.push({ prop: sort_by_1, direction: sort_dir_1, isString: false });
+  }
+  if (sort_by_2 != "none") {
+    sortBy.push({ prop: sort_by_2, direction: sort_dir_2, isString: false });
+  }
+  sortBy.push({ prop: "id", direction: sort_id_dir, isString: false });
 
   for (var group in display_groups) {
     display_groups[group] = display_groups[group].sort((a: any, b: any) => sortArrayBy(a,b,sortBy));
@@ -332,33 +348,40 @@ function sortDisplays(group_by: string, sort_by: string, sort_dir: number, sort_
   placeCharacterDisplays(display_groups, num_per_row);
 }
 
+const NUM_TO_WORD = {"0": "Zero", "1": "One", "2": "Two", "3": "Three", "4": "Four", "5": "Five"};
+
 // adds each display_property to the corresponding group.
-function group_properties (display_properties: any[], group_by: string) {
+function group_properties (display_properties: any[], group_by: string, group_dir: number) {
   var display_groups = {};
   if (group_by == "attribute") {
-    display_groups = {"Fire": [], "Water": [], "Forest": [], "Light": [], "Dark": [], "Void": []};
+    if (group_dir == 1) display_groups = {"Fire": [], "Water": [], "Forest": [], "Light": [], "Dark": [], "Void": []};
+    if (group_dir == -1) display_groups = {"Void": [], "Dark": [], "Light": [], "Forest": [], "Water": [], "Fire": []};
     display_properties.forEach(function(properties) {
       display_groups[properties["attribute"]].push(properties);
     });
   } else if (group_by == "rank") {
-    display_groups = {"5": [], "4": [], "3": [], "2": [], "1": []};
+    if (group_dir == 1) display_groups = {"One": [], "Two": [], "Three": [], "Four": [], "Five": []};
+    if (group_dir == -1) display_groups = {"Five": [], "Four": [], "Three": [], "Two": [], "One": []};
     display_properties.forEach(function(properties) {
-      display_groups[properties["rank"]].push(properties);
+      display_groups[NUM_TO_WORD[properties["rank"]]].push(properties);
     });
   } else if (group_by == "magic") {
-    display_groups = {"3": [], "2": [], "1": [], "0": []};
+    if (group_dir == 1) display_groups = {"Zero": [], "One": [], "Two": [], "Three": []};
+    if (group_dir == -1) display_groups = {"Three": [], "Two": [], "One": [], "Zero": []};
     display_properties.forEach(function(properties) {
-      display_groups[properties["magic"]].push(properties);
+      display_groups[NUM_TO_WORD[properties["magic"]]].push(properties);
     });
   } else if (group_by == "magia") {
-    display_groups = {"5": [], "4": [], "3": [], "2": [], "1": []};
+    if (group_dir == 1) display_groups = {"One": [], "Two": [], "Three": [], "Four": [], "Five": []};
+    if (group_dir == -1) display_groups = {"Five": [], "Four": [], "Three": [], "Two": [], "One": []};
     display_properties.forEach(function(properties) {
-      display_groups[properties["magia"]].push(properties);
+      display_groups[NUM_TO_WORD[properties["magia"]]].push(properties);
     });
   } else if (group_by == "episode") {
-    display_groups = {"5": [], "4": [], "3": [], "2": [], "1": []};
+    if (group_dir == 1) display_groups = {"One": [], "Two": [], "Three": [], "Four": [], "Five": []};
+    if (group_dir == -1) display_groups = {"Five": [], "Four": [], "Three": [], "Two": [], "One": []};
     display_properties.forEach(function(properties) {
-      display_groups[properties["episode"]].push(properties);
+      display_groups[NUM_TO_WORD[properties["episode"]]].push(properties);
     });
   } else if (group_by == "none") {
     display_groups = {"none": []};

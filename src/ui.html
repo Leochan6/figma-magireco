@@ -82,7 +82,7 @@
             <div id="sorting_fields" align="left">
                 <table id="sorting_table" width=100%>
                     <tr>
-                        <td>Group By: 
+                        <td title="Group by this property.">Group By:</td>
                         <td><select id="group_by">
                                 <option selected value="Attribute">Attribute</option>
                                 <option value="Rank">Rank</option>
@@ -92,28 +92,51 @@
                                 <option value="None">None</option>
                             </select>
                         </td>
+                        <td><select id="group_dir">
+                            <option selected value="Ascending">Ascending</option>
+                            <option value="Descending">Descending</option>
+                            </select>
+                        </td>
                     </tr>
                     <tr>
-                        <td>Sort By: 
-                        <td><select id="sort_by">
+                        <td title="Sort by this property first.">Sort By 1:</td>
+                        <td><select id="sort_by_1">
+                                <option value="Attribute">Attribute</option>
                                 <option value="Rank">Rank</option>
                                 <option selected value="Level">Level</option>
                                 <option value="Magic">Magic</option>
                                 <option value="Magia">Magia</option>
                                 <option value="Episode">Episode</option>
+                                <option value="None">None</option>
+                            </select>
+                        </td>
+                        <td><select id="sort_dir_1">
+                            <option value="Ascending">Ascending</option>
+                            <option selected value="Descending">Descending</option>
                             </select>
                         </td>
                     </tr>
                     <tr>
-                        <td>Sort Direction: 
-                        <td><select id="sort_dir">
-                                <option value="Ascending">Ascending</option>
-                                <option selected value="Descending">Descending</option>
+                        <td title="Sort by this property second.">Sort By 2:</td>
+                        <td><select id="sort_by_2">
+                                <option value="Attribute">Attribute</option>
+                                <option value="Rank">Rank</option>
+                                <option value="Level">Level</option>
+                                <option value="Magic">Magic</option>
+                                <option value="Magia">Magia</option>
+                                <option value="Episode">Episode</option>
+                                <option selected value="None">None</option>
+                            </select>
+                        </td>
+                        <td><select id="sort_dir_2">
+                            <option value="Ascending">Ascending</option>
+                            <option selected value="Descending">Descending</option>
                             </select>
                         </td>
                     </tr>
                     <tr>
-                        <td>ID Sort Direction: 
+                        <td title="Sort by the id of the character last.">ID Sort Direction:</td>
+                        <td></td>
                         <td><select id="sort_id_dir">
                                 <option value="Ascending">Ascending</option>
                                 <option selected value="Descending">Descending</option>

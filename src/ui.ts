@@ -32,8 +32,11 @@ const ui = {
     sorting: {
       fields: {
         group_select:        document.getElementById('group_by') as HTMLSelectElement,
-        sort_select:         document.getElementById('sort_by') as HTMLSelectElement,
-        sort_dir_select:     document.getElementById('sort_dir') as HTMLSelectElement,
+        group_dir_select:        document.getElementById('group_dir') as HTMLSelectElement,
+        sort_by_1_select:         document.getElementById('sort_by_1') as HTMLSelectElement,
+        sort_dir_1_select:     document.getElementById('sort_dir_1') as HTMLSelectElement,
+        sort_by_2_select:         document.getElementById('sort_by_2') as HTMLSelectElement,
+        sort_dir_2_select:     document.getElementById('sort_dir_2') as HTMLSelectElement,
         sort_id_dir_select:  document.getElementById('sort_id_dir') as HTMLSelectElement,
         row_field:           document.getElementById('displays_per_row') as HTMLInputElement,
       },
@@ -169,11 +172,14 @@ document.getElementById('convert').onclick = () => {
 // Group and sort the current selection.
 document.getElementById('sort').onclick = () => {
   const group_by = ui.tabs.sorting.fields.group_select.value.toLowerCase();
-  const sort_by = ui.tabs.sorting.fields.sort_select.value.toLowerCase();
-  const sort_dir = ui.tabs.sorting.fields.sort_dir_select.value == "Ascending" ? 1 : -1;
+  const group_dir = ui.tabs.sorting.fields.group_dir_select.value == "Ascending" ? 1 : -1;
+  const sort_by_1 = ui.tabs.sorting.fields.sort_by_1_select.value.toLowerCase();
+  const sort_dir_1 = ui.tabs.sorting.fields.sort_dir_1_select.value == "Ascending" ? 1 : -1;
+  const sort_by_2 = ui.tabs.sorting.fields.sort_by_2_select.value.toLowerCase();
+  const sort_dir_2 = ui.tabs.sorting.fields.sort_dir_2_select.value == "Ascending" ? 1 : -1;
   const sort_id_dir = ui.tabs.sorting.fields.sort_id_dir_select.value == "Ascending" ? 1 : -1;
   const num_per_row = parseInt(ui.tabs.sorting.fields.row_field.value);
-  parent.postMessage({ pluginMessage: { type: 'sort-displays', group_by: group_by, sort_by: sort_by, sort_dir: sort_dir, sort_id_dir: sort_id_dir, num_per_row: num_per_row} }, '*')
+  parent.postMessage({ pluginMessage: { type: 'sort-displays', group_by: group_by, group_dir: group_dir, sort_by_1: sort_by_1, sort_dir_1: sort_dir_1, sort_by_2: sort_by_2, sort_dir_2: sort_dir_2, sort_id_dir: sort_id_dir, num_per_row: num_per_row} }, '*')
 }
 
 // Convert the selected frames into instances.

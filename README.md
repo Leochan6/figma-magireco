@@ -54,7 +54,7 @@ This plugin is for creating a grid view of your Magical Girls in the game [Magia
 ### Grouping and Sorting List
 1. Navigate to the `Sorting` tab.
 2. Select a frame containing only Character Displays.
-3. Select the property to group by, the property to sort by, the sorting direction, the direction to sort the ID's (the second property to sort by), and the number of Character Displays per row.
+3. Select the property to group by, the property(s) to sort by, the grouping and sorting direction(s), the direction to sort the ID's (the last property to sort by), and the number of Character Displays per row.
 4. Press `Sort`.
 
 ### Adding Background to List

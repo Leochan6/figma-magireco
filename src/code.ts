@@ -1,4 +1,4 @@
-import {getNames, getAttributeRanks, getDisplayProperties, ButtonOptionsModel} from "./utils";
+import {getNames, getAttributeRanks, getDisplayProperties, compareVersion, ButtonOptionsModel} from "./utils";
 import {getBackgroundNames, isBackgroundInstance, updateBackground, setBackgroundSizeLocation, removeBackground } from "./background";
 import {createDisplay, setLocation, updateDisplay, convertToCharacterDisplay, isCharacterDisplay, isCharacterDisplayInstance, sortDisplays} from "./character";
 
@@ -111,7 +111,7 @@ figma.ui.onmessage = msg => {
     else {
       // check the version of the project file.
       var documentVersionText = figma.getNodeById("474:5384");
-      if (documentVersionText == null || documentVersionText.type != "TEXT" || (documentVersionText as TextNode).characters != documentVersion) {
+      if (documentVersionText == null || documentVersionText.type != "TEXT" || compareVersion((documentVersionText as TextNode).characters, documentVersion)) {
         if (documentVersionText != null && documentVersionText.type == "TEXT") {
           console.log("Expected: " + documentVersion + " Found: " + (documentVersionText as TextNode).characters);
         }
@@ -156,7 +156,7 @@ figma.ui.onmessage = msg => {
 
   // sort the Character Displays in the selected frame.
   else if (msg.type === 'sort-displays') {
-    sortDisplays(msg.group_by, msg.sort_by, msg.sort_dir, msg.sort_id_dir, msg.num_per_row);
+    sortDisplays(msg.group_by, msg.group_dir, msg.sort_by_1, msg.sort_dir_1, msg.sort_by_2, msg.sort_dir_2, msg.sort_id_dir, msg.num_per_row);
   }
 
   // update the list of background names for the selected background type.

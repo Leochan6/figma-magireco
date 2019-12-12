@@ -95,6 +95,29 @@ function printFrameDisplays(selection: SceneNode) {
   });
 }
 
+function compareVersion(documentCharacters: string, expectedCharacters: string) {
+  if (documentCharacters != expectedCharacters) {
+    if (!documentCharacters.match(RegExp("Document Version: [0-9](.[0-9])*"))) {
+      console.log("text modified");
+      return 1;
+    }
+    var result = documentCharacters.match(RegExp("[0-9](.[0-9])*"));
+    var expected = expectedCharacters.match(RegExp("[0-9](.[0-9])*"));
+    console.log(result, expected);
+    console.log(parseFloat(result[0]), parseFloat(expected[0]));
+    if (parseFloat(result[0]) >= parseFloat(expected[0])) {
+      // console.log("same or greater version");
+      return 0;
+    } else {
+      console.log("different version");
+      return 1;
+    }
+  } else {
+    // console.log("same text");
+    return 0;
+  }
+}
+
 class ButtonOptionsModel {
   copy: boolean = false;
   update: boolean = false;
@@ -150,4 +173,4 @@ function sortArrayBy(a: any, b: any, sortBy: any[]) {
   return result;
 }
 
-export {getNames, getAttributeRanks, getCharacterId, getDisplayProperties, printFrameDisplays, ButtonOptionsModel, sortArrayBy};
+export {getNames, getAttributeRanks, getCharacterId, getDisplayProperties, compareVersion, printFrameDisplays, ButtonOptionsModel, sortArrayBy};
