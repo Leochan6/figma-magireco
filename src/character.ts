@@ -4,10 +4,12 @@ import {getDisplayProperties, sortArrayBy} from "./utils";
 // Create a new Character Display and returns the instance.
 function createDisplay (parameters: any) {
   var valid = parametersValid(parameters);
+  console.log(valid);
   var instance = null;
   if (valid.all_valid) {
     var character_display_component = figma.getNodeById("3:908") as ComponentNode;
     instance = character_display_component.createInstance();
+    console.log(instance.name);
     instance.name = "Character Display/" + parameters.name;
     if (parameters.full_name) instance.name += " - Rank " + parameters.rank + 
       " - Level " + parameters.level + " - Magic " + parameters.magic + 
@@ -113,23 +115,23 @@ function setCharacter (instance: InstanceNode, attribute: string, rank: string, 
     background_instance.masterComponent = figma.getNodeById("1:118") as ComponentNode;
   }
 
-  if (rank == "One") {
+  if (rank == "1") {
     frame_intance.masterComponent = figma.getNodeById("1:97") as ComponentNode;
     star_instance.masterComponent = figma.getNodeById("1:124") as ComponentNode;
   }
-  else if (rank == "Two") {
+  else if (rank == "2") {
     frame_intance.masterComponent = figma.getNodeById("1:98") as ComponentNode;
     star_instance.masterComponent = figma.getNodeById("1:125") as ComponentNode;
   }
-  else if (rank == "Three") {
+  else if (rank == "3") {
     frame_intance.masterComponent = figma.getNodeById("1:99") as ComponentNode;
     star_instance.masterComponent = figma.getNodeById("1:126") as ComponentNode;
   }
-  else if (rank == "Four") {
+  else if (rank == "4") {
     frame_intance.masterComponent = figma.getNodeById("1:100") as ComponentNode;
     star_instance.masterComponent = figma.getNodeById("1:127") as ComponentNode;
   }
-  else if (rank == "Five") {
+  else if (rank == "5") {
     frame_intance.masterComponent = figma.getNodeById("1:101") as ComponentNode;
     star_instance.masterComponent = figma.getNodeById("1:128") as ComponentNode;
   }
@@ -156,30 +158,30 @@ function setLevel (instance: InstanceNode, level: string) {
 // sets the magic level.
 function setMagic (instance: InstanceNode, magic: string) {
   var magic_instance = instance.children[1] as InstanceNode;
-  if      (magic == "Zero")   magic_instance.masterComponent = figma.getNodeById("3:896") as ComponentNode;
-  else if (magic == "One")   magic_instance.masterComponent = figma.getNodeById("3:13") as ComponentNode;
-  else if (magic == "Two")   magic_instance.masterComponent = figma.getNodeById("7:470") as ComponentNode;
-  else if (magic == "Three")   magic_instance.masterComponent = figma.getNodeById("7:477") as ComponentNode;
+  if      (magic == "0")   magic_instance.masterComponent = figma.getNodeById("3:896") as ComponentNode;
+  else if (magic == "1")   magic_instance.masterComponent = figma.getNodeById("3:13") as ComponentNode;
+  else if (magic == "2")   magic_instance.masterComponent = figma.getNodeById("7:470") as ComponentNode;
+  else if (magic == "3")   magic_instance.masterComponent = figma.getNodeById("7:477") as ComponentNode;
 };
 
 // sets the magia and episode level.
 function setMagia (instance: InstanceNode, magia: string, episode: string) {
   var magia_instance = instance.children[0] as InstanceNode;
-  if      (magia == "One" && episode == "One")   magia_instance.masterComponent = figma.getNodeById("10:1993") as ComponentNode;
-  else if (magia == "One" && episode == "Two")   magia_instance.masterComponent = figma.getNodeById("10:1960") as ComponentNode;
-  else if (magia == "One" && episode == "Three")   magia_instance.masterComponent = figma.getNodeById("10:1911") as ComponentNode;
-  else if (magia == "One" && episode == "Four")   magia_instance.masterComponent = figma.getNodeById("10:1846") as ComponentNode;
-  else if (magia == "One" && episode == "Five")   magia_instance.masterComponent = figma.getNodeById("3:41") as ComponentNode;
-  else if (magia == "Two" && episode == "Two")   magia_instance.masterComponent = figma.getNodeById("10:1961") as ComponentNode;
-  else if (magia == "Two" && episode == "Three")   magia_instance.masterComponent = figma.getNodeById("10:1912") as ComponentNode;
-  else if (magia == "Two" && episode == "Four")   magia_instance.masterComponent = figma.getNodeById("10:1847") as ComponentNode;
-  else if (magia == "Two" && episode == "Five")   magia_instance.masterComponent = figma.getNodeById("7:496") as ComponentNode;
-  else if (magia == "Three" && episode == "Three")   magia_instance.masterComponent = figma.getNodeById("10:1913") as ComponentNode;
-  else if (magia == "Three" && episode == "Four")   magia_instance.masterComponent = figma.getNodeById("10:1848") as ComponentNode;
-  else if (magia == "Three" && episode == "Five")   magia_instance.masterComponent = figma.getNodeById("7:507") as ComponentNode;
-  else if (magia == "Four" && episode == "Four")   magia_instance.masterComponent = figma.getNodeById("10:1849") as ComponentNode;
-  else if (magia == "Four" && episode == "Five")   magia_instance.masterComponent = figma.getNodeById("7:514") as ComponentNode;
-  else if (magia == "Five" && episode == "Five")   magia_instance.masterComponent = figma.getNodeById("7:521") as ComponentNode;
+  if      (magia == "1" && episode == "1")   magia_instance.masterComponent = figma.getNodeById("10:1993") as ComponentNode;
+  else if (magia == "1" && episode == "2")   magia_instance.masterComponent = figma.getNodeById("10:1960") as ComponentNode;
+  else if (magia == "1" && episode == "3")   magia_instance.masterComponent = figma.getNodeById("10:1911") as ComponentNode;
+  else if (magia == "1" && episode == "4")   magia_instance.masterComponent = figma.getNodeById("10:1846") as ComponentNode;
+  else if (magia == "1" && episode == "5")   magia_instance.masterComponent = figma.getNodeById("3:41") as ComponentNode;
+  else if (magia == "2" && episode == "2")   magia_instance.masterComponent = figma.getNodeById("10:1961") as ComponentNode;
+  else if (magia == "2" && episode == "3")   magia_instance.masterComponent = figma.getNodeById("10:1912") as ComponentNode;
+  else if (magia == "2" && episode == "4")   magia_instance.masterComponent = figma.getNodeById("10:1847") as ComponentNode;
+  else if (magia == "2" && episode == "5")   magia_instance.masterComponent = figma.getNodeById("7:496") as ComponentNode;
+  else if (magia == "3" && episode == "3")   magia_instance.masterComponent = figma.getNodeById("10:1913") as ComponentNode;
+  else if (magia == "3" && episode == "4")   magia_instance.masterComponent = figma.getNodeById("10:1848") as ComponentNode;
+  else if (magia == "3" && episode == "5")   magia_instance.masterComponent = figma.getNodeById("7:507") as ComponentNode;
+  else if (magia == "4" && episode == "4")   magia_instance.masterComponent = figma.getNodeById("10:1849") as ComponentNode;
+  else if (magia == "4" && episode == "5")   magia_instance.masterComponent = figma.getNodeById("7:514") as ComponentNode;
+  else if (magia == "5" && episode == "5")   magia_instance.masterComponent = figma.getNodeById("7:521") as ComponentNode;
 };
 
 
@@ -211,23 +213,23 @@ function parametersValid (msg: any) {
       result.name_valid = true;
       if (child.name.includes("/Rank " + msg.rank)) {
         result.rank_valid = true;
-        if (msg.rank == "One") {
+        if (msg.rank == "1") {
           if (level >= 1 && level <= 40) result.level_valid = true;
           else result.message += "Experience Level must be between 1 and 40 for rank 1.\n";
         }
-        else if (msg.rank == "Two") {
+        else if (msg.rank == "2") {
           if (level >= 1 && level <= 50) result.level_valid = true;
           else result.message += "Experience Level must be between 1 and 50 for rank 2.\n";
         }
-        else if (msg.rank == "Three") {
+        else if (msg.rank == "3") {
           if (level >= 1 && level <= 60) result.level_valid = true;
           else result.message += "Experience Level must be between 1 and 60 for rank 3.\n";
         }
-        else if (msg.rank == "Four") {
+        else if (msg.rank == "4") {
           if (level >= 1 && level <= 80) result.level_valid = true;
           else result.message += "Experience Level must be between 1 and 80 for rank 4.\n";
         }
-        else if (msg.rank == "Five") {
+        else if (msg.rank == "5") {
           if (level >= 1 && level <= 100) result.level_valid = true;
           else result.message += "Experience Level must be between 1 and 100 for rank 5.\n";
         }

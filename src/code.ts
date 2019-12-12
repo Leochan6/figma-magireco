@@ -48,7 +48,7 @@ figma.on("selectionchange", () => {
       }
 
       // all children are frame and Character Display frames.
-      else if (selection.children.every(isCharacterDisplay)) {
+      else if (selection.children.length > 0 && selection.children.every(isCharacterDisplay)) {
         var buttonOptions = new ButtonOptionsModel({"convert":true});
         buttonOptions.enabledDisableButtons();
       }
