@@ -4,12 +4,10 @@ import {getDisplayProperties, sortArrayBy} from "./utils";
 // Create a new Character Display and returns the instance.
 function createDisplay (parameters: any) {
   var valid = parametersValid(parameters);
-  console.log(valid);
   var instance = null;
   if (valid.all_valid) {
     var character_display_component = figma.getNodeById("3:908") as ComponentNode;
     instance = character_display_component.createInstance();
-    console.log(instance.name);
     instance.name = "Character Display/" + parameters.name;
     if (parameters.full_name) instance.name += " - Rank " + parameters.rank + 
       " - Level " + parameters.level + " - Magic " + parameters.magic + 
