@@ -11,7 +11,7 @@ function getBackgroundNames(type: string) {
       names.push(name);
     }
   });
-  names.sort();
+  names.reverse();
   return names;
 }
 

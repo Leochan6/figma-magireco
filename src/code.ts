@@ -1,4 +1,4 @@
-import {getNames, getAttributeRanks, getDisplayProperties, compareVersion, ButtonOptionsModel} from "./utils";
+import {getNames, getAttributeRanks, getDisplayProperties, createComponentsFromChildren, compareVersion, ButtonOptionsModel} from "./utils";
 import {getBackgroundNames, isBackgroundInstance, updateBackground, setBackgroundSizeLocation, removeBackground } from "./background";
 import {createDisplay, setLocation, updateDisplay, convertToCharacterDisplay, isCharacterDisplay, isCharacterDisplayInstance, sortDisplays} from "./character";
 
@@ -184,7 +184,7 @@ figma.ui.onmessage = msg => {
   }
   
   // close the plugin.
-  else if (msg.type === 'cancel') {
+  else if (msg.type === 'cancel') {    
     figma.closePlugin();
   }
 

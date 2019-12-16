@@ -95,6 +95,21 @@ function printFrameDisplays(selection: SceneNode) {
   });
 }
 
+function createComponentsFromChildren() {
+  var frame = figma.currentPage.selection[0] as FrameNode;
+    frame.children.forEach(function (element, i) {
+      var component = figma.createComponent();
+      component.appendChild(element);
+      component.resize(element.width, element.height);
+      component.x = element.x;
+      component.y = element.y;
+      element.x = 0;
+      element.y = 0;
+      component.name = element.name;
+      frame.insertChild(i, component);
+    });
+}
+
 function compareVersion(documentCharacters: string, expectedCharacters: string) {
   if (documentCharacters != expectedCharacters) {
     if (!documentCharacters.match(RegExp("Document Version: [0-9](.[0-9])*"))) {
@@ -173,4 +188,4 @@ function sortArrayBy(a: any, b: any, sortBy: any[]) {
   return result;
 }
 
-export {getNames, getAttributeRanks, getCharacterId, getDisplayProperties, compareVersion, printFrameDisplays, ButtonOptionsModel, sortArrayBy};
+export {getNames, getAttributeRanks, getCharacterId, getDisplayProperties, compareVersion, printFrameDisplays, createComponentsFromChildren, ButtonOptionsModel, sortArrayBy};
