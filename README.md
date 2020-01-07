@@ -70,7 +70,7 @@ This plugin is for creating a grid view of your Magical Girls in the game [Magia
 
 ### Removing a Background.
 1. Navigate to the `Background Tab`.
-2. Select the frame you want to add a background to.
+2. Select the frame you want to remove a background from.
 3. Press `Remove`.
 
 ## Gallery
@@ -84,7 +84,11 @@ Name Select:
 
 Sorting:
 
-![Settings](https://raw.githubusercontent.com/Leochan6/figma-magireco/master/readme/Sorting.png)
+![Sorting](https://raw.githubusercontent.com/Leochan6/figma-magireco/master/readme/Sorting.png)
+
+Background:
+
+![Background](https://raw.githubusercontent.com/Leochan6/figma-magireco/master/readme/Background.png)
 
 Settings:
 

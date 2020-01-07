@@ -1,9 +1,9 @@
-import {getNames, getAttributeRanks, getDisplayProperties, createComponentsFromChildren, compareVersion, ButtonOptionsModel} from "./utils";
+import {getNames, getAttributeRanks, getDisplayProperties, createComponentsFromChildren, compareVersion, getSettings, saveSettings, ButtonOptionsModel} from "./utils";
 import {getBackgroundNames, isBackgroundInstance, updateBackground, setBackgroundSizeLocation, removeBackground } from "./background";
 import {createDisplay, setLocation, updateDisplay, convertToCharacterDisplay, isCharacterDisplay, isCharacterDisplayInstance, sortDisplays} from "./character";
 
 
-const documentVersion = "Document Version: 4";
+const documentVersion = "Document Version: 5";
 
 // show the HTML page in "ui.html" and resize.
 figma.showUI(__html__);
@@ -120,6 +120,11 @@ figma.ui.onmessage = msg => {
         message = "Please reduplicate the project.";
         figma.notify(message, {timeout: 5000});
       }
+      // load settings.
+      getSettings().then(settings => {
+        figma.ui.postMessage({type: 'update-settings', settings:settings });
+      })
+      // load font.
       figma.loadFontAsync({ family: "Roboto", style: "Regular" }).then(() => {
         // get the names and set the name select fields.
         var names = getNames();
@@ -183,6 +188,11 @@ figma.ui.onmessage = msg => {
     removeBackground();
   }
   
+  // save settings to client storage.
+  else if (msg.type === 'save-settings') {
+    saveSettings(msg.settings);
+  }
+
   // close the plugin.
   else if (msg.type === 'cancel') {    
     figma.closePlugin();

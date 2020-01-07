@@ -8,6 +8,7 @@ function getBackgroundNames(type: string) {
   background_frame.children.forEach(function(child: ComponentNode) {
     var name = child.name;
     if (names.indexOf(name) == -1) {
+      if (name.indexOf("Background/") == 0) name = name.split("/")[1];
       names.push(name);
     }
   });
@@ -37,7 +38,7 @@ function updateBackground(type: string, name: string) {
   var background_id: string;
   // search for component id.
   background_frame.children.forEach(function(child: ComponentNode) {
-    if (child.name == name) {
+    if (child.name == name || child.name == "Background/" + name) {
       background_id = child.id;
       return;
     }

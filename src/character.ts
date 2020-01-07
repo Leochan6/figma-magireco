@@ -1,4 +1,5 @@
 import {getDisplayProperties, sortArrayBy} from "./utils";
+import { isBackgroundInstance } from "./background";
 
 
 // Create a new Character Display and returns the instance.
@@ -43,6 +44,7 @@ function updateDisplay (instance: InstanceNode, parameters: any) {
 function setLocation (instance: InstanceNode) {
   if (figma.currentPage.selection.length != 1) return;
   var selection = figma.currentPage.selection[0];
+  if (isBackgroundInstance(selection)) selection = selection.parent as SceneNode;
   if (selection.type == "INSTANCE") {
     if (selection.parent.type == "FRAME" || selection.parent.type == "GROUP" || selection.parent.type == "COMPONENT" || selection.parent.type == "PAGE" || selection.parent.type == "DOCUMENT") {
       // set the instance x and y value.
@@ -58,12 +60,22 @@ function setLocation (instance: InstanceNode) {
     }
   } 
   else if (selection.type == "FRAME" || selection.type == "GROUP" || selection.type == "COMPONENT") {
-    if (selection.children.length > 0) {
-      var last_child = selection.children[0];
+    var last_child = null;
+    var hasBackground = selection.children.some(isBackgroundInstance);
+    if (selection.children.length > 0 && !hasBackground || selection.children.length > 1 && hasBackground) {
+      // get the last character display.
+      if (selection.children.length > 0 && !hasBackground) {
+        if (isCharacterDisplayInstance(selection.children[0]))
+          last_child = selection.children[0];
+      } else if (selection.children.length > 1 && hasBackground) {
+        if (isCharacterDisplayInstance(selection.children[1]))
+          last_child = selection.children[1];
+      } 
+    }
+    if (last_child != null) {
+      // set the instance x and y value.
       var x_next = last_child.x + last_child.width;
       var y_next = last_child.y;
-      
-      // set the instance x and y value.
       if (x_next < selection.width && y_next < selection.height) {
         instance.x = x_next;
         instance.y = y_next;
@@ -76,7 +88,8 @@ function setLocation (instance: InstanceNode) {
         return;
       }
     }
-    selection.insertChild(0, instance);
+    if (hasBackground) selection.insertChild(1, instance);
+    else selection.insertChild(0, instance);
   }
 }
 

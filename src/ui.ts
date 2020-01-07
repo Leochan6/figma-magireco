@@ -58,8 +58,13 @@ const ui = {
     },
     settings_tab:           document.getElementById('settings_tab') as HTMLDivElement,
     settings: {
-      keep_open_checkbox:   document.getElementById('keep_open') as HTMLInputElement,
-      full_name_checkbox:   document.getElementById('full_name') as HTMLInputElement,
+      fields: {
+        keep_open_checkbox:   document.getElementById('keep_open') as HTMLInputElement,
+        full_name_checkbox:   document.getElementById('full_name') as HTMLInputElement,
+      },
+      buttons: {
+        save_settings_button: document.getElementById('save_settings') as HTMLButtonElement,
+      }
     },
   }
 }
@@ -133,8 +138,8 @@ document.getElementById('create').onclick = () => {
   const magic = ui.tabs.home.fields.magic_select.value;
   const magia = ui.tabs.home.fields.magia_select.value;
   const episode = ui.tabs.home.fields.episode_select.value;
-  const full_name = ui.tabs.settings.full_name_checkbox.checked;
-  const keep_open = ui.tabs.settings.keep_open_checkbox.checked;
+  const full_name = ui.tabs.settings.fields.full_name_checkbox.checked;
+  const keep_open = ui.tabs.settings.fields.keep_open_checkbox.checked;
   parent.postMessage({ pluginMessage: { type: 'create-display', name, attribute, rank, level, magic, magia, episode, full_name, keep_open } }, '*')
 }
 
@@ -159,8 +164,8 @@ document.getElementById('update').onclick = () => {
   const magic = ui.tabs.home.fields.magic_select.value;
   const magia = ui.tabs.home.fields.magia_select.value;
   const episode = ui.tabs.home.fields.episode_select.value;
-  const full_name = ui.tabs.settings.full_name_checkbox.checked;
-  const keep_open = ui.tabs.settings.keep_open_checkbox.checked;
+  const full_name = ui.tabs.settings.fields.full_name_checkbox.checked;
+  const keep_open = ui.tabs.settings.fields.keep_open_checkbox.checked;
   parent.postMessage({ pluginMessage: { type: 'update-display', name, attribute, rank, level, magic, magia, episode, full_name, keep_open } }, '*')
 }
 
@@ -197,6 +202,15 @@ document.getElementById('resize_background').onclick = () => {
 // removes the current background.
 document.getElementById('remove_background').onclick = () => {
   parent.postMessage({ pluginMessage: { type: 'remove-background' } }, '*')
+}
+
+// save the settings to client storage.
+document.getElementById('save_settings').onclick = () => {
+  var settings = {};
+  for (var field in ui.tabs.settings.fields) {
+    settings[ui.tabs.settings.fields[field].id] = ui.tabs.settings.fields[field].checked;
+  }
+  parent.postMessage({ pluginMessage: { type: 'save-settings', settings: settings } }, '*')
 }
 
 
@@ -244,9 +258,17 @@ onmessage = (event) => {
     name_select.value = name_select.options[0].value;
   }
 
-  // Set isplay_properties with the properties of the current selection.
+  // Set display_properties with the properties of the current selection.
   else if (event.data.pluginMessage.type === 'update-properties') {
     display_properties = event.data.pluginMessage.display_properties
+  }
+
+  // Update the settings checkboxes.
+  else if (event.data.pluginMessage.type === 'update-settings') {
+    var settings = event.data.pluginMessage.settings;
+    for (var setting in settings) {
+      ui.tabs.settings.fields[setting+"_checkbox"].checked = settings[setting];
+    }
   }
 
   // Disable a specific button.

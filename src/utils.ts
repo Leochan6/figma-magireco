@@ -23,13 +23,14 @@ function getAttributeRanks (name: string) {
     if (child_name_split[1] == name) {
       var description = JSON.parse(child.description);
       result.attribute = description["attribute"];
-      var rank = parseInt(child_name_split[2].split(" ")[1], 10);
+      var rank = description["rank"];
       result.ranks[rank-1] = false;
     }
   });
   return result;
 }
 
+// get the character id of the name.
 function getCharacterId (name: string) {
   var character_image = figma.getNodeById("1:142") as FrameNode;
   var result = "0"
@@ -118,8 +119,8 @@ function compareVersion(documentCharacters: string, expectedCharacters: string) 
     }
     var result = documentCharacters.match(RegExp("[0-9](.[0-9])*"));
     var expected = expectedCharacters.match(RegExp("[0-9](.[0-9])*"));
-    console.log(result, expected);
-    console.log(parseFloat(result[0]), parseFloat(expected[0]));
+    // console.log(result, expected);
+    // console.log(parseFloat(result[0]), parseFloat(expected[0]));
     if (parseFloat(result[0]) >= parseFloat(expected[0])) {
       // console.log("same or greater version");
       return 0;
@@ -130,6 +131,23 @@ function compareVersion(documentCharacters: string, expectedCharacters: string) 
   } else {
     // console.log("same text");
     return 0;
+  }
+}
+
+const defaultSettings = {"keep_open":true, "full_name":false};
+
+async function getSettings() {
+  var settings = defaultSettings;
+  for (var setting in settings) {
+    var value = await figma.clientStorage.getAsync(setting);
+    if (value !== undefined) settings[setting] = value;
+  }
+  return settings;
+}
+
+async function saveSettings(settings: any) {
+  for (var setting in settings) {
+    await figma.clientStorage.setAsync(setting, settings[setting]);
   }
 }
 
@@ -188,4 +206,4 @@ function sortArrayBy(a: any, b: any, sortBy: any[]) {
   return result;
 }
 
-export {getNames, getAttributeRanks, getCharacterId, getDisplayProperties, compareVersion, printFrameDisplays, createComponentsFromChildren, ButtonOptionsModel, sortArrayBy};
+export {getNames, getAttributeRanks, getCharacterId, getDisplayProperties, compareVersion, getSettings, saveSettings, printFrameDisplays, createComponentsFromChildren, ButtonOptionsModel, sortArrayBy};
