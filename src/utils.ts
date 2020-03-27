@@ -1,8 +1,8 @@
 // gets the names of all the Magical Girls in character_image frame and sorts them alphabetically.
-function getNames () {
+function getNames() {
   var names = [];
   var character_image = figma.getNodeById("1:142") as FrameNode;
-  character_image.children.forEach(function(child: ComponentNode) {
+  character_image.children.forEach(function (child: ComponentNode) {
     var name = child.name;
     name = name.split("/")[1];
     if (names.indexOf(name) == -1) {
@@ -14,27 +14,27 @@ function getNames () {
 }
 
 // gets the attribute and the available ranks for the Magical Girls name.
-function getAttributeRanks (name: string) {
-  var result = {attribute:"",ranks:[true,true,true,true,true]};
+function getAttributeRanks(name: string) {
+  var result = { attribute: "", ranks: [true, true, true, true, true] };
   var character_image = figma.getNodeById("1:142") as FrameNode;
-  character_image.children.forEach(function(child: ComponentNode) {
+  character_image.children.forEach(function (child: ComponentNode) {
     var child_name = child.name;
     var child_name_split = child_name.split("/");
     if (child_name_split[1] == name) {
       var description = JSON.parse(child.description);
       result.attribute = description["attribute"];
       var rank = description["rank"];
-      result.ranks[rank-1] = false;
+      result.ranks[rank - 1] = false;
     }
   });
   return result;
 }
 
 // get the character id of the name.
-function getCharacterId (name: string) {
+function getCharacterId(name: string) {
   var character_image = figma.getNodeById("1:142") as FrameNode;
   var result = "0"
-  character_image.children.forEach(function(child: ComponentNode) {
+  character_image.children.forEach(function (child: ComponentNode) {
     var child_name = child.name;
     var child_name_split = child_name.split("/");
     if (child_name_split[1] == name) {
@@ -46,7 +46,7 @@ function getCharacterId (name: string) {
 }
 
 // gets the properties of the current selection.
-function getDisplayProperties (selection: InstanceNode) {
+function getDisplayProperties(selection: InstanceNode) {
   var display_properties = {};
   var magia_instance = selection.children[0] as InstanceNode;
   var magic_instance = selection.children[1] as InstanceNode;
@@ -98,17 +98,17 @@ function printFrameDisplays(selection: SceneNode) {
 
 function createComponentsFromChildren() {
   var frame = figma.currentPage.selection[0] as FrameNode;
-    frame.children.forEach(function (element, i) {
-      var component = figma.createComponent();
-      component.appendChild(element);
-      component.resize(element.width, element.height);
-      component.x = element.x;
-      component.y = element.y;
-      element.x = 0;
-      element.y = 0;
-      component.name = element.name;
-      frame.insertChild(i, component);
-    });
+  frame.children.forEach(function (element, i) {
+    var component = figma.createComponent();
+    component.appendChild(element);
+    component.resize(element.width, element.height);
+    component.x = element.x;
+    component.y = element.y;
+    element.x = 0;
+    element.y = 0;
+    component.name = element.name;
+    frame.insertChild(i, component);
+  });
 }
 
 function compareVersion(documentCharacters: string, expectedCharacters: string) {
@@ -134,7 +134,7 @@ function compareVersion(documentCharacters: string, expectedCharacters: string) 
   }
 }
 
-const defaultSettings = {"keep_open":true, "full_name":false};
+const defaultSettings = { "keep_open": true, "full_name": false };
 
 async function getSettings() {
   var settings = defaultSettings;
@@ -160,26 +160,26 @@ class ButtonOptionsModel {
   resize_background: boolean = false;
   remove_background: boolean = false;
 
-  constructor(init?:Partial<ButtonOptionsModel>) {
+  constructor(init?: Partial<ButtonOptionsModel>) {
     Object.assign(this, init);
   }
 
   enabledDisableButtons() {
-    if (this.copy) figma.ui.postMessage({type: 'enable-element', name: "copy"});
-    else figma.ui.postMessage({type: 'disable-element', name: "copy"});
-    if (this.update) figma.ui.postMessage({type: 'enable-element', name: "update"});
-    else figma.ui.postMessage({type: 'disable-element', name: "update"});
-    if (this.convert) figma.ui.postMessage({type: 'enable-element', name: "convert"});
-    else figma.ui.postMessage({type: 'disable-element', name: "convert"});
-    if (this.sort) figma.ui.postMessage({type: 'enable-element', name: "sort"});
-    else figma.ui.postMessage({type: 'disable-element', name: "sort"});
-    if (this.update_background) figma.ui.postMessage({type: 'enable-element', name: "update_background"});
-    else figma.ui.postMessage({type: 'disable-element', name: "update_background"});
-    if (this.resize_background) figma.ui.postMessage({type: 'enable-element', name: "resize_background"});
-    else figma.ui.postMessage({type: 'disable-element', name: "resize_background"});
-    if (this.remove_background) figma.ui.postMessage({type: 'enable-element', name: "remove_background"});
-    else figma.ui.postMessage({type: 'disable-element', name: "remove_background"});
-  } 
+    if (this.copy) figma.ui.postMessage({ type: 'enable-element', name: "copy" });
+    else figma.ui.postMessage({ type: 'disable-element', name: "copy" });
+    if (this.update) figma.ui.postMessage({ type: 'enable-element', name: "update" });
+    else figma.ui.postMessage({ type: 'disable-element', name: "update" });
+    if (this.convert) figma.ui.postMessage({ type: 'enable-element', name: "convert" });
+    else figma.ui.postMessage({ type: 'disable-element', name: "convert" });
+    if (this.sort) figma.ui.postMessage({ type: 'enable-element', name: "sort" });
+    else figma.ui.postMessage({ type: 'disable-element', name: "sort" });
+    if (this.update_background) figma.ui.postMessage({ type: 'enable-element', name: "update_background" });
+    else figma.ui.postMessage({ type: 'disable-element', name: "update_background" });
+    if (this.resize_background) figma.ui.postMessage({ type: 'enable-element', name: "resize_background" });
+    else figma.ui.postMessage({ type: 'disable-element', name: "resize_background" });
+    if (this.remove_background) figma.ui.postMessage({ type: 'enable-element', name: "remove_background" });
+    else figma.ui.postMessage({ type: 'disable-element', name: "remove_background" });
+  }
 }
 
 
@@ -195,15 +195,15 @@ class ButtonOptionsModel {
  *   direction: 1,
  *   isString: true
  * }];
- */ 
+ */
 function sortArrayBy(a: any, b: any, sortBy: any[]) {
   let i = 0, result = 0;
-    while (i < sortBy.length && result === 0) {
-      if (sortBy[i].isString) result = sortBy[i].direction*(a[sortBy[i].prop].toString() < b[sortBy[i].prop].toString() ? -1 : (a[sortBy[i].prop].toString() > b[sortBy[i].prop].toString() ? 1 : 0));
-      else result = sortBy[i].direction*(parseInt((a[sortBy[i].prop]).toString()) < parseInt((b[sortBy[i].prop]).toString()) ? -1 : (parseInt((a[sortBy[i].prop]).toString()) > parseInt((b[sortBy[i].prop]).toString()) ? 1 : 0));
-      i++;
-    }
+  while (i < sortBy.length && result === 0) {
+    if (sortBy[i].isString) result = sortBy[i].direction * (a[sortBy[i].prop].toString() < b[sortBy[i].prop].toString() ? -1 : (a[sortBy[i].prop].toString() > b[sortBy[i].prop].toString() ? 1 : 0));
+    else result = sortBy[i].direction * (parseInt((a[sortBy[i].prop]).toString()) < parseInt((b[sortBy[i].prop]).toString()) ? -1 : (parseInt((a[sortBy[i].prop]).toString()) > parseInt((b[sortBy[i].prop]).toString()) ? 1 : 0));
+    i++;
+  }
   return result;
 }
 
-export {getNames, getAttributeRanks, getCharacterId, getDisplayProperties, compareVersion, getSettings, saveSettings, printFrameDisplays, createComponentsFromChildren, ButtonOptionsModel, sortArrayBy};
+export { getNames, getAttributeRanks, getCharacterId, getDisplayProperties, compareVersion, getSettings, saveSettings, printFrameDisplays, createComponentsFromChildren, ButtonOptionsModel, sortArrayBy };

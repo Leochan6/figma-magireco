@@ -1,196 +1,202 @@
 <body style="margin:0px">
-    <div id="tab_bar" class="tab-bar" style="background-color:#2c2c2c" align="left">
-        <button id="home_btn" class="tablink button buttonBlue" >Home</button>
-        <button id="sorting_btn" class="tablink button buttonGray" >Sorting</button>
-        <button id="background_btn" class="tablink button buttonGray" >Background</button>
-        <button id="settings_btn" class="tablink button buttonGray" >Settings</button>
+  <div id="tab_bar" class="tab-bar" style="background-color:#2c2c2c" align="left">
+    <button id="home_btn" class="tablink button buttonBlue">Home</button>
+    <button id="sorting_btn" class="tablink button buttonGray">Sorting</button>
+    <button id="background_btn" class="tablink button buttonGray">Background</button>
+    <button id="settings_btn" class="tablink button buttonGray">Settings</button>
+  </div>
+  <div id="tabs" style="margin:20px">
+    <div id="home_tab" class="tab">
+      <div id="home_fields" align="left">
+        <table id="fields_table" width=100%>
+          <tr>
+            <td>Name:</td>
+            <td><select id="name" style="width:214px"></select></td>
+          </tr>
+          <tr>
+            <td>Attribute:
+            <td><select id="attribute">
+                <option value="Dark">Dark</option>
+                <option value="Fire">Fire</option>
+                <option selected value="Light">Light</option>
+                <option value="Forest">Forest</option>
+                <option value="Void">Void</option>
+                <option value="Water">Water</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td>Rank:</td>
+            <td><select id="rank">
+                <option value="1">1</option>
+                <option selected value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select></td>
+          </tr>
+          <tr>
+            <td>Experience Level:</td>
+            <td><input id="level" class="custom-input" type="number" value=1 maxlength="3" size=3 min=1 max=100
+                border="2px solid black"></td>
+          </tr>
+          <tr>
+            <td>Magic Level:</td>
+            <td><select id="magic">
+                <option selected value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+              </select></td>
+          </tr>
+          <tr>
+            <td>Magia Level:</td>
+            <td><select id="magia">
+                <option selectedvalue="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select></td>
+          </tr>
+          <tr>
+            <td>Episode Level:</td>
+            <td><select id="episode">
+                <option selectedvalue="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select></td>
+          </tr>
+        </table>
+      </div>
+      <div id="home_buttons" align="left">
+        <button id="create" class="button buttonGray"
+          title="The selection must only contain Character Display Frames. Please remove any other objects."
+          type="submit">Create</button>
+        <button id="update" class="button buttonDisabled" disabled>Update</button>
+        <button id="copy" class="button buttonDisabled" disabled>Copy</button>
+        <button id="convert" class="button buttonDisabled"
+          title="The selection must only contain Character Display Frames. Please remove any other objects."
+          disabled>Convert</button>
+        <button id="cancel" class="button buttonGray" disabled style="display:none">Cancel</button>
+      </div>
     </div>
-    <div id="tabs" style="margin:20px">
-        <div id="home_tab" class="tab">
-            <div id="home_fields" align="left">
-                <table id="fields_table" width=100%>
-                    <tr>
-                        <td>Name:</td>
-                        <td><select id="name" style="width:214px"></select></td>
-                    </tr>
-                    <tr>
-                        <td>Attribute: 
-                        <td><select id="attribute">
-                                <option value="Dark">Dark</option>
-                                <option value="Fire">Fire</option>
-                                <option selected value="Light">Light</option>
-                                <option value="Forest">Forest</option>
-                                <option value="Void">Void</option>
-                                <option value="Water">Water</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Rank:</td>
-                        <td><select id="rank">
-                            <option value="1">1</option>
-                            <option selected value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                        </select></td> 
-                    </tr>
-                    <tr>    
-                        <td>Experience Level:</td> 
-                        <td><input id="level" class="custom-input" type="number" value=1 maxlength="3" size=3 min=1 max=100 border="2px solid black"></td> 
-                    </tr>
-                    <tr>    
-                        <td>Magic Level:</td> 
-                        <td><select id="magic">
-                            <option selected value="0">0</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                        </select></td> 
-                    </tr>
-                    <tr>
-                        <td>Magia Level:</td> 
-                        <td><select id="magia"> 
-                            <option selectedvalue="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                        </select></td> 
-                    </tr>
-                    <tr>
-                        <td>Episode Level:</td> 
-                        <td><select id="episode">
-                            <option selectedvalue="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                        </select></td>
-                    </tr>
-                </table>
-            </div>
-            <div id="home_buttons" align="left">
-                <button id="create" class="button buttonGray" type="submit">Create</button>
-                <button id="update"class="button buttonDisabled" disabled>Update</button>
-                <button id="copy" class="button buttonDisabled" disabled>Copy</button>
-                <button id="convert" class="button buttonDisabled" disabled>Convert</button>
-                <button id="cancel" class="button buttonGray" disabled style="display:none">Cancel</button>
-            </div>
-        </div>
-        <div id="sorting_tab" class="tab" style="display:none">
-            <div id="sorting_fields" align="left">
-                <table id="sorting_table" width=100%>
-                    <tr>
-                        <td title="Group by this property.">Group By:</td>
-                        <td><select id="group_by">
-                                <option selected value="Attribute">Attribute</option>
-                                <option value="Rank">Rank</option>
-                                <option value="Magic">Magic</option>
-                                <option value="Magia">Magia</option>
-                                <option value="Episode">Episode</option>
-                                <option value="None">None</option>
-                            </select>
-                        </td>
-                        <td><select id="group_dir">
-                            <option selected value="Ascending">Ascending</option>
-                            <option value="Descending">Descending</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td title="Sort by this property first.">Sort By 1:</td>
-                        <td><select id="sort_by_1">
-                                <option value="Attribute">Attribute</option>
-                                <option value="Rank">Rank</option>
-                                <option selected value="Level">Level</option>
-                                <option value="Magic">Magic</option>
-                                <option value="Magia">Magia</option>
-                                <option value="Episode">Episode</option>
-                                <option value="None">None</option>
-                            </select>
-                        </td>
-                        <td><select id="sort_dir_1">
-                            <option value="Ascending">Ascending</option>
-                            <option selected value="Descending">Descending</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td title="Sort by this property second.">Sort By 2:</td>
-                        <td><select id="sort_by_2">
-                                <option value="Attribute">Attribute</option>
-                                <option value="Rank">Rank</option>
-                                <option value="Level">Level</option>
-                                <option value="Magic">Magic</option>
-                                <option value="Magia">Magia</option>
-                                <option value="Episode">Episode</option>
-                                <option selected value="None">None</option>
-                            </select>
-                        </td>
-                        <td><select id="sort_dir_2">
-                            <option value="Ascending">Ascending</option>
-                            <option selected value="Descending">Descending</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td title="Sort by the id of the character last.">ID Sort Direction:</td>
-                        <td></td>
-                        <td><select id="sort_id_dir">
-                                <option value="Ascending">Ascending</option>
-                                <option selected value="Descending">Descending</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>    
-                        <td>Displays Per Row:</td> 
-                        <td><input id="displays_per_row" class="custom-input" type="number" value=8 maxlength="2" size=2 min=1 max=99 border="2px solid black"></td> 
-                    </tr>
-                </table>
-            </div>
-            <div id="sorting_buttons" align="left">
-                <button id="sort" class="button buttonDisabled" type="submit" disabled >Sort</button>
-            </div>
-        </div>
-        <div id="background_tab" class="tab" style="display:none">
-            <div id="background_fields" align="left">
-                <table id="background_table" width=100%>
-                    <tr>
-                        <td>Background Type: 
-                        <td><select id="background_type" style="width:206">
-                            <option selected value="Home Screen">Home Screen</option>
-                            <option value="Web Backgrounds">Web Backgrounds</option>
-                            <option value="Story Backgrounds">Story Backgrounds</option>
-                        </select>
-                    </tr>
-                    <tr>
-                        </td>
-                        <td>Background Name: 
-                        <td><select id="background_name" style="width:206"><td>
-                    </tr>
-                </table>
-            </div>
-            <div id="background_buttons" align="left">
-                <button id="update_background" class="button buttonDisabled" type="submit" disabled >Create/Update</button>
-                <button id="resize_background" class="button buttonDisabled" disabled >Resize</button>
-                <button id="remove_background" class="button buttonDisabled" disabled >Remove</button>
-            </div>
-        </div>
-        <div id="settings_tab" class="tab" style="display:none">
-            <table id=settings_table>
-                <tr>
-                    <td>Keep Dialog Open:</td>
-                    <td><input id="keep_open" type="checkbox" checked></td>
-                </tr>
-                <tr>
-                    <td>Full Component Name:</td>
-                    <td><input id="full_name" type="checkbox"></td>
-                </tr>
-            </table>
-            
-            <button id="save_settings" class="button buttonGray" >Save</button>
-        </div>
+    <div id="sorting_tab" class="tab" style="display:none">
+      <div id="sorting_fields" align="left">
+        <table id="sorting_table" width=100%>
+          <tr>
+            <td title="Group by this property.">Group By:</td>
+            <td><select id="group_by">
+                <option selected value="Attribute">Attribute</option>
+                <option value="Rank">Rank</option>
+                <option value="Magic">Magic</option>
+                <option value="Magia">Magia</option>
+                <option value="Episode">Episode</option>
+                <option value="None">None</option>
+              </select>
+            </td>
+            <td><select id="group_dir">
+                <option selected value="Ascending">Ascending</option>
+                <option value="Descending">Descending</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td title="Sort by this property first.">Sort By 1:</td>
+            <td><select id="sort_by_1">
+                <option value="Attribute">Attribute</option>
+                <option value="Rank">Rank</option>
+                <option selected value="Level">Level</option>
+                <option value="Magic">Magic</option>
+                <option value="Magia">Magia</option>
+                <option value="Episode">Episode</option>
+                <option value="None">None</option>
+              </select>
+            </td>
+            <td><select id="sort_dir_1">
+                <option value="Ascending">Ascending</option>
+                <option selected value="Descending">Descending</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td title="Sort by this property second.">Sort By 2:</td>
+            <td><select id="sort_by_2">
+                <option value="Attribute">Attribute</option>
+                <option value="Rank">Rank</option>
+                <option value="Level">Level</option>
+                <option value="Magic">Magic</option>
+                <option value="Magia">Magia</option>
+                <option value="Episode">Episode</option>
+                <option selected value="None">None</option>
+              </select>
+            </td>
+            <td><select id="sort_dir_2">
+                <option value="Ascending">Ascending</option>
+                <option selected value="Descending">Descending</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td title="Sort by the id of the character last.">ID Sort Direction:</td>
+            <td></td>
+            <td><select id="sort_id_dir">
+                <option value="Ascending">Ascending</option>
+                <option selected value="Descending">Descending</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td>Displays Per Row:</td>
+            <td><input id="displays_per_row" class="custom-input" type="number" value=8 maxlength="2" size=2 min=1
+                max=99 border="2px solid black"></td>
+          </tr>
+        </table>
+      </div>
+      <div id="sorting_buttons" align="left">
+        <button id="sort" class="button buttonDisabled" type="submit" disabled>Sort</button>
+      </div>
     </div>
-</body>
+    <div id="background_tab" class="tab" style="display:none">
+      <div id="background_fields" align="left">
+        <table id="background_table" width=100%>
+          <tr>
+            <td>Background Type:
+            <td><select id="background_type" style="width:206">
+                <option selected value="Home Screen">Home Screen</option>
+                <option value="Web Backgrounds">Web Backgrounds</option>
+                <option value="Story Backgrounds">Story Backgrounds</option>
+              </select>
+          </tr>
+          <tr>
+            </td>
+            <td>Background Name:
+            <td><select id="background_name" style="width:206">
+            <td>
+          </tr>
+        </table>
+      </div>
+      <div id="background_buttons" align="left">
+        <button id="update_background" class="button buttonDisabled" type="submit" disabled>Create/Update</button>
+        <button id="resize_background" class="button buttonDisabled" disabled>Resize</button>
+        <button id="remove_background" class="button buttonDisabled" disabled>Remove</button>
+      </div>
+    </div>
+    <div id="settings_tab" class="tab" style="display:none">
+      <table id=settings_table>
+        <tr>
+          <td>Keep Dialog Open:</td>
+          <td><input id="keep_open" type="checkbox" checked></td>
+        </tr>
+        <tr>
+          <td>Full Component Name:</td>
+          <td><input id="full_name" type="checkbox"></td>
+        </tr>
+      </table>
 
+      <button id="save_settings" class="button buttonGray">Save</button>
+    </div>
+  </div>
+</body>

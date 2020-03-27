@@ -2,10 +2,10 @@
 function getBackgroundNames(type: string) {
   var names = [];
   var background_frame: ComponentNode;
-  if      (type == "Home Screen")      background_frame = figma.getNodeById("16:5638") as ComponentNode;
-  else if (type == "Web Backgrounds")  background_frame = figma.getNodeById("373:3335") as ComponentNode;
+  if (type == "Home Screen") background_frame = figma.getNodeById("16:5638") as ComponentNode;
+  else if (type == "Web Backgrounds") background_frame = figma.getNodeById("373:3335") as ComponentNode;
   else if (type == "Story Backgrounds") background_frame = figma.getNodeById("16:5647") as ComponentNode;
-  background_frame.children.forEach(function(child: ComponentNode) {
+  background_frame.children.forEach(function (child: ComponentNode) {
     var name = child.name;
     if (names.indexOf(name) == -1) {
       if (name.indexOf("Background/") == 0) name = name.split("/")[1];
@@ -25,19 +25,25 @@ function isBackgroundInstance(node: SceneNode) {
   else return false;
 }
 
+// check if the Frame Node is an Instance Node and is an instance of Background.
+function isBackgroundFrame(node: SceneNode) {
+  if (node.type == "FRAME" && node.name.split("/")[0] == "Backgrounds") return true;
+  else return false;
+}
+
 // update the selected frame with the selected background name.
 function updateBackground(type: string, name: string) {
   var background_frame: ComponentNode = null;
-  if      (type == "Home Screen")      background_frame = figma.getNodeById("16:5638") as ComponentNode;
-  else if (type == "Web Backgrounds")  background_frame = figma.getNodeById("373:3335") as ComponentNode;
+  if (type == "Home Screen") background_frame = figma.getNodeById("16:5638") as ComponentNode;
+  else if (type == "Web Backgrounds") background_frame = figma.getNodeById("373:3335") as ComponentNode;
   else if (type == "Story Backgrounds") background_frame = figma.getNodeById("16:5647") as ComponentNode;
   if (background_frame == null) {
-    figma.notify("That background is invalid or backgrounds not found in document.", {timeout: 10000});
+    figma.notify("That background is invalid or backgrounds not found in document.", { timeout: 10000 });
     return;
   }
   var background_id: string;
   // search for component id.
-  background_frame.children.forEach(function(child: ComponentNode) {
+  background_frame.children.forEach(function (child: ComponentNode) {
     if (child.name == name || child.name == "Background/" + name) {
       background_id = child.id;
       return;
@@ -49,7 +55,7 @@ function updateBackground(type: string, name: string) {
   // if current selection is the frame.
   if (selection.type == "FRAME") {
     // search if an background instance exists.
-    selection.children.forEach(function(child) {
+    selection.children.forEach(function (child) {
       if (isBackgroundInstance(child)) background_instance = child as InstanceNode;
       return;
     });
@@ -61,7 +67,7 @@ function updateBackground(type: string, name: string) {
       background_instance = background_component.createInstance();
       selection.insertChild(0, background_instance);
     }
-  } 
+  }
   // if the current selection is the background instance.
   else if (selection.type == "INSTANCE") {
     background_instance = selection;
@@ -71,7 +77,7 @@ function updateBackground(type: string, name: string) {
   figma.currentPage.selection = [];
   setTimeout(() => {
     figma.currentPage.selection = [selection];
-  },100);
+  }, 100);
 }
 
 // resize and moved the background to fit the currently selected frame.
@@ -79,7 +85,7 @@ function setBackgroundSizeLocation() {
   var background_instance: InstanceNode = null;
   var selection = figma.currentPage.selection[0] as FrameNode;
   // search if an background instance exists.
-  selection.children.forEach(function(child) {
+  selection.children.forEach(function (child) {
     if (isBackgroundInstance(child)) background_instance = child as InstanceNode;
     return;
   });
@@ -88,24 +94,24 @@ function setBackgroundSizeLocation() {
   background_instance.resize(master_component.width, master_component.height);
   // resize background instance.
   if (background_instance.height < selection.height && background_instance.width > selection.width) {
-    var new_width = background_instance.width*selection.height/background_instance.height;
+    var new_width = background_instance.width * selection.height / background_instance.height;
     background_instance.resize(new_width, selection.height);
   }
   else if (background_instance.width < selection.width && background_instance.height > selection.height) {
-    var new_height = background_instance.height*selection.width/background_instance.width;
+    var new_height = background_instance.height * selection.width / background_instance.width;
     background_instance.resize(selection.width, new_height);
   }
   else {
-    var width_ratio = selection.width/background_instance.width
-    var height_ratio = selection.height/background_instance.height;
-    var new_width = background_instance.width*height_ratio;
-    var new_height = background_instance.height*width_ratio;
+    var width_ratio = selection.width / background_instance.width
+    var height_ratio = selection.height / background_instance.height;
+    var new_width = background_instance.width * height_ratio;
+    var new_height = background_instance.height * width_ratio;
     if (width_ratio > height_ratio) background_instance.resize(selection.width, new_height);
     else background_instance.resize(new_width, selection.height);
   }
   // move background instance align center.
-  var new_x = selection.width/2 - background_instance.width/2;
-  var new_y = selection.height/2 - background_instance.height/2;
+  var new_x = selection.width / 2 - background_instance.width / 2;
+  var new_y = selection.height / 2 - background_instance.height / 2;
   background_instance.x = new_x;
   background_instance.y = new_y;
 }
@@ -116,7 +122,7 @@ function removeBackground() {
   var selection = figma.currentPage.selection[0];
   if (selection.type == "FRAME") {
     // search if an background instance exists.
-    selection.children.forEach(function(child) {
+    selection.children.forEach(function (child) {
       if (isBackgroundInstance(child)) background_instance = child as InstanceNode;
       return;
     });
@@ -128,7 +134,7 @@ function removeBackground() {
   figma.currentPage.selection = [];
   setTimeout(() => {
     figma.currentPage.selection = [parent];
-  },100);
+  }, 100);
 }
 
-export {getBackgroundNames, isBackgroundInstance, updateBackground, setBackgroundSizeLocation, removeBackground};
+export { getBackgroundNames, isBackgroundInstance, isBackgroundFrame, updateBackground, setBackgroundSizeLocation, removeBackground };
